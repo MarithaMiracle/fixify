@@ -27,13 +27,13 @@ const HowItWorks = () => {
             <div className="container mx-auto px-6 text-center">
                 <div className="mb-12">
                     <h2 className="text-3xl md:text-4xl font-bold text-gray-800 font-poppins">How Fixify Works</h2>
-                    <div className="mt-2 h-1 w-20 bg-teal-600 mx-auto"></div>
+                    <div className="mt-2 h-1 w-20 bg-[#cc6500] mx-auto"></div>
                 </div>
                 
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
                     {steps.map((step, index) => (
                         <div key={index} className="bg-white p-8 rounded-xl shadow-md border border-gray-100">
-                            <div className="flex justify-center mb-4 text-teal-700 text-6xl">
+                            <div className="flex justify-center mb-4 text-[#cc6500] text-6xl">
                                 {step.icon}
                             </div>
                             <h3 className="text-xl font-semibold text-gray-800 mb-2 font-poppins">{step.title}</h3>

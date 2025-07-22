@@ -11,15 +11,15 @@ const Navbar = () => {
         <nav className="fixed w-full bg-white shadow-sm z-50 transition-all duration-300 ease-in-out">
             <div className="container mx-auto px-6 py-4 flex justify-between items-center">
                 {/* Logo */}
-                <a href="/" className="text-2xl font-bold text-teal-700 font-poppins">Fixify</a>
+                <a href="/" className="text-2xl font-bold text-[#cc5500] font-poppins">Fixify</a>
 
                 {/* Desktop Navigation */}
                 <div className="hidden md:flex items-center space-x-6">
-                    <a href="#" className="text-gray-700 hover:text-teal-700 transition-colors font-inter">Services</a>
-                    <a href="#" className="text-gray-700 hover:text-teal-700 transition-colors font-inter">About Us</a>
-                    <a href="#" className="text-gray-700 hover:text-teal-700 transition-colors font-inter">Become a Provider</a>
-                    <a href="#" className="text-gray-700 hover:text-teal-700 transition-colors font-inter">Login</a>
-                    <button className="bg-teal-700 text-white px-6 py-2 rounded-full text-sm font-semibold hover:bg-teal-700 transition-all duration-300 ease-in-out shadow-md hover:shadow-lg font-inter">
+                    <a href="#" className="text-gray-700 hover:text-[#cc5500] transition-colors font-inter">Services</a>
+                    <a href="#" className="text-gray-700 hover:text-[#cc5500] transition-colors font-inter">About Us</a>
+                    <a href="#" className="text-gray-700 hover:text-[#cc5500] transition-colors font-inter">Become a Provider</a>
+                    <a href="#" className="text-gray-700 hover:text-[#cc5500] transition-colors font-inter">Login</a>
+                    <button className="bg-[#cc5500] text-white px-6 py-2 rounded-full text-sm font-semibold hover:bg-[#cc5500] transition-all duration-300 ease-in-out shadow-md hover:shadow-lg font-inter">
                         Sign Up
                     </button>
                 </div>

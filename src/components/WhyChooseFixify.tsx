@@ -42,7 +42,7 @@ const WhyChooseFixify = () => {
           <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-800 font-poppins">
             Why Choose Fixify?
           </h2>
-          <div className="mt-2 h-1 w-20 bg-teal-600 mx-auto"></div>
+          <div className="mt-2 h-1 w-20 bg-[#cc6500] mx-auto"></div>
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8">
@@ -68,7 +68,7 @@ const WhyChooseFixify = () => {
               {/* Text content with consistent padding */}
               <div className="p-5 flex-1 flex flex-col">
                 <div className="flex items-center mb-3">
-                  <span className="text-teal-600 mr-2">{prop.icon}</span>
+                  <span className="text-[#cc6500] mr-2">{prop.icon}</span>
                   <h3 className="text-lg font-semibold text-gray-800 font-poppins">
                     {prop.title}
                   </h3>

@@ -15,7 +15,7 @@ const CallToActionProvider = () => {
                         <p className="text-gray-700 mb-6 text-base sm:text-lg font-inter leading-relaxed">
                             Grow your business and reach more customers. Join our network of top-rated professionals today.
                         </p>
-                        <button className="bg-teal-700 text-white font-semibold px-6 py-3 sm:px-8 sm:py-3 rounded-full hover:bg-teal-800 transition-all duration-300 ease-in-out shadow-lg hover:shadow-xl transform hover:scale-105 font-inter">
+                        <button className="bg-[#cc5500] text-white font-semibold px-6 py-3 sm:px-8 sm:py-3 rounded-full hover:bg-[#cc4500] transition-all duration-300 ease-in-out shadow-lg hover:shadow-xl transform hover:scale-105 font-inter">
                             Join Fixify →
                         </button>
                     </div>
@@ -24,7 +24,7 @@ const CallToActionProvider = () => {
                     <div className="w-full md:w-1/2 flex justify-center">
                         <div className="relative">
                             <img
-                                src="/impressed-young-african-american-builder-uniform-holding-roller-brush-isolated-blue-background.jpg"
+                                src="/carpenter-cutting-mdf-board-inside-workshop (1).jpg"
                                 alt="Confident African service provider holding tools"
                                 className="rounded-xl shadow-lg w-full max-w-md object-cover h-auto scale-x-[-1]"
                                 onError={(e) => {

@@ -27,7 +27,7 @@ const FeaturedCategories = () => {
             <div className="container mx-auto px-6">
                 <div className='mb-12'>
                 <h2 className="text-3xl md:text-4xl font-bold text-gray-800 text-center font-poppins">Our Popular Services</h2>
-                <div className="mt-2 h-1 w-20 bg-teal-600 mx-auto"></div>
+                <div className="mt-2 h-1 w-20 bg-[#cc5500] mx-auto"></div>
                 </div>
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                     {categories.map((category, index) => (
@@ -36,12 +36,12 @@ const FeaturedCategories = () => {
                             className="category-card bg-white p-8 rounded-xl shadow-md transition-all duration-300 ease-in-out text-center border border-gray-100
                                        hover:scale-105 hover:shadow-lg"
                         >
-                            <div className="flex justify-center mb-4 text-teal-700 text-5xl">
+                            <div className="flex justify-center mb-4 text-[#cc5500] text-5xl">
                                 {category.icon}
                             </div>
                             <h3 className="text-xl font-semibold text-gray-800 mb-2 font-poppins">{category.name}</h3>
                             <p className="text-gray-600 mb-4 font-inter">{category.description}</p>
-                            <a href="#" className="text-teal-700 font-semibold hover:text-teal-700 transition-colors font-inter">Learn More →</a>
+                            <a href="#" className="text-[#cc5500] font-semibold hover:text-teal-700 transition-colors font-inter">Learn More →</a>
                         </div>
                     ))}
                 </div>

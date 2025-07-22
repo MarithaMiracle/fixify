@@ -31,7 +31,7 @@ const TestimonialsSlider = () => {
                     <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-800 font-poppins">
                         What Our Customers Say
                     </h2>
-                    <div className="mt-2 h-1 w-20 bg-teal-600 mx-auto"></div>
+                    <div className="mt-2 h-1 w-20 bg-[#cc6500] mx-auto"></div>
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
@@ -47,7 +47,7 @@ const TestimonialsSlider = () => {
                             </div>
                             <div className="flex items-center mt-4">
                                 <div className="relative">
-                                    <div className="w-12 h-12 rounded-full overflow-hidden ring-2 ring-teal-500 ring-offset-2">
+                                    <div className="w-12 h-12 rounded-full overflow-hidden ring-2 ring-[#cc6500] ring-offset-2">
                                         <img
                                             src={testimonial.avatar}
                                             alt={`Portrait of ${testimonial.author}`}
