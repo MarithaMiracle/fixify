@@ -23,7 +23,7 @@ const FeaturedCategories = () => {
     ];
 
     return (
-        <section className="py-20 bg-white"> {/* Changed background to white for contrast as per inspiration */}
+        <section className="py-20 bg-white">
             <div className="container mx-auto px-6">
                 <div className='mb-12'>
                 <h2 className="text-3xl md:text-4xl font-bold text-gray-800 text-center font-poppins">Our Popular Services</h2>

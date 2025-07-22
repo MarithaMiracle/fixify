@@ -7,7 +7,7 @@ const CallToActionProvider = () => {
         <section className="py-12 md:py-20 bg-white">
             <div className="container mx-auto px-4 sm:px-6 lg:px-8">
                 <div className="flex flex-col md:flex-row items-center justify-between bg-soft-blue p-8 md:p-12 rounded-xl shadow-lg gap-8 md:gap-12">
-                    {/* Text content (stays on left) */}
+                    
                     <div className="w-full md:w-1/2 text-center md:text-left">
                         <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-800 mb-4 font-poppins">
                             Become a Trusted Fixify Provider
@@ -20,7 +20,6 @@ const CallToActionProvider = () => {
                         </button>
                     </div>
 
-                    {/* Image container (stays on right but flipped) */}
                     <div className="w-full md:w-1/2 flex justify-center">
                         <div className="relative">
                             <img

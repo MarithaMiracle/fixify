@@ -51,7 +51,6 @@ const WhyChooseFixify = () => {
               key={index}
               className="bg-white rounded-lg overflow-hidden shadow-md hover:shadow-lg transition-shadow duration-300 flex flex-col h-full border border-gray-100"
             >
-              {/* Image container with fixed aspect ratio (4:3) */}
               <div className="relative pt-[75%] overflow-hidden">
                 <img
                   src={prop.image}
@@ -65,7 +64,6 @@ const WhyChooseFixify = () => {
                 />
               </div>
 
-              {/* Text content with consistent padding */}
               <div className="p-5 flex-1 flex flex-col">
                 <div className="flex items-center mb-3">
                   <span className="text-[#cc6500] mr-2">{prop.icon}</span>

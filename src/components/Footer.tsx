@@ -54,7 +54,7 @@ const Footer = () => {
                         <input
                             type="email"
                             placeholder="Your email"
-                            className="flex-grow p-3 rounded-lg bg-orange-100 border border-orange-600 text-white placeholder-orange-600 focus:outline-none focus:ring-2 focus:ring-orange-400 font-inter"
+                            className="flex-grow p-3 rounded-lg bg-orange-100 border border-orange-600 text-orange-600 placeholder-orange-600 focus:outline-none focus:ring-2 focus:ring-orange-400 font-inter"
                         />
                         <button className="bg-orange-400 text-white px-5 py-3 rounded-lg hover:bg-orange-700 transition-colors font-semibold font-inter">
                             Subscribe
