@@ -2,17 +2,7 @@
 
 import React from 'react';
 import Link from 'next/link';
-
 import { Star, MapPin, Clock, MessageSquareText, Image, ClipboardList } from 'lucide-react';
-
-type ProviderProfilePageParams = {
-  id: string;
-};
-
-interface ProviderProfilePageProps {
-  params: ProviderProfilePageParams;
-  searchParams: { [key: string]: string | string[] | undefined };
-}
 
 interface Service {
   name: string;
@@ -26,7 +16,11 @@ interface Review {
   text: string;
 }
 
-export default function ProviderProfilePage({ params }: ProviderProfilePageProps) {
+interface PageParams {
+  id: string;
+}
+
+export default function ProviderProfilePage({ params }: { params: PageParams }) {
   const { id: providerId } = params;
 
   // Mock provider data - replace with actual data fetching in production
@@ -61,6 +55,24 @@ export default function ProviderProfilePage({ params }: ProviderProfilePageProps
     workingHours: "Mon - Sat: 9:00 AM - 6:00 PM",
   };
 
+  const handleImageError = (e: React.SyntheticEvent<HTMLImageElement, Event>) => {
+    const target = e.target as HTMLImageElement;
+    target.onerror = null;
+    target.src = "https://placehold.co/150x150/cccccc/ffffff?text=Pro";
+  };
+
+  const handlePortfolioImageError = (e: React.SyntheticEvent<HTMLImageElement, Event>) => {
+    const target = e.target as HTMLImageElement;
+    target.onerror = null;
+    target.src = "https://placehold.co/600x400/cccccc/ffffff?text=Portfolio";
+  };
+
+  const handleAvatarError = (e: React.SyntheticEvent<HTMLImageElement, Event>) => {
+    const target = e.target as HTMLImageElement;
+    target.onerror = null;
+    target.src = "https://placehold.co/40x40/cccccc/ffffff?text=User";
+  };
+
   return (
     <div className="min-h-screen flex flex-col bg-gray-50">
       <main className="flex-grow pt-24 pb-12">
@@ -77,11 +89,7 @@ export default function ProviderProfilePage({ params }: ProviderProfilePageProps
                 src={provider.profileImage}
                 alt={`${provider.name}'s profile`}
                 className="w-32 h-32 rounded-full object-cover border-4 border-white shadow-lg mb-4"
-                onError={(e) => { 
-                  const target = e.target as HTMLImageElement;
-                  target.onerror = null; 
-                  target.src = "https://placehold.co/150x150/cccccc/ffffff?text=Pro"; 
-                }}
+                onError={handleImageError}
               />
               <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-2 font-poppins">{provider.name}</h1>
               <p className="text-lg text-[#cc6500] font-semibold mb-2 font-inter">{provider.category}</p>
@@ -142,11 +150,7 @@ export default function ProviderProfilePage({ params }: ProviderProfilePageProps
                         src={image}
                         alt={`Portfolio image ${index + 1}`}
                         className="w-full h-32 md:h-48 object-cover"
-                        onError={(e) => { 
-                          const target = e.target as HTMLImageElement;
-                          target.onerror = null; 
-                          target.src = "https://placehold.co/600x400/cccccc/ffffff?text=Portfolio"; 
-                        }}
+                        onError={handlePortfolioImageError}
                       />
                     </div>
                   ))}
@@ -199,11 +203,7 @@ export default function ProviderProfilePage({ params }: ProviderProfilePageProps
                           src={`https://placehold.co/40x40/f3e5f5/9c27b0?text=${review.author.split(' ')[0][0]}${review.author.split(' ')[1]?.[0] || ''}`}
                           alt={`${review.author}'s avatar`}
                           className="w-10 h-10 rounded-full object-cover mr-3 shadow-sm"
-                          onError={(e) => { 
-                            const target = e.target as HTMLImageElement;
-                            target.onerror = null; 
-                            target.src = "https://placehold.co/40x40/cccccc/ffffff?text=User"; 
-                          }}
+                          onError={handleAvatarError}
                         />
                         <div>
                           <p className="font-semibold text-gray-800 font-poppins">{review.author}</p>
