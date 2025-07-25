@@ -1,5 +1,8 @@
 "use client";
 
+import React from 'react';
+import Link from 'next/link';
+
 const HeroSection = () => {
     return (
         <section className="relative bg-gradient-to-br from-orange-50 to-[#e9a473] py-20 md:py-32 flex items-center justify-center min-h-[60vh] mt-16 md:mt-0 overflow-hidden">
@@ -18,12 +21,18 @@ const HeroSection = () => {
                     Find reliable professionals for plumbing, makeup, catering, tailoring, and more, right here in Nigeria.
                 </p>
                 <div className="flex flex-col sm:flex-row justify-center gap-4">
-                    <button className="bg-[#cc5500] text-white px-8 py-3 rounded-full text-lg font-semibold hover:bg-[#cc5500] transition-all duration-300 ease-in-out shadow-lg hover:shadow-xl transform hover:scale-105 font-inter">
-                        Book a Service
-                    </button>
-                    <button className="bg-white text-[#cc5500] border-2 border-[#cc5500] px-8 py-3 rounded-full text-lg font-semibold hover:bg-orange-50 transition-all duration-300 ease-in-out shadow-md hover:shadow-lg transform hover:scale-105 font-inter">
-                        Find Talent
-                    </button>
+                    {/* "Book a Service" button links to the booking flow start page */}
+                    <Link href="/booking" passHref>
+                        <button className="bg-[#cc5500] text-white px-8 py-3 rounded-full text-lg font-semibold hover:bg-[#a95500] transition-all duration-300 ease-in-out shadow-lg hover:shadow-xl transform hover:scale-105 font-inter">
+                            Book a Service
+                        </button>
+                    </Link>
+                    {/* "Find Talent" button links to the search results page */}
+                    <Link href="/search" passHref>
+                        <button className="bg-white text-[#cc5500] border-2 border-[#cc5500] px-8 py-3 rounded-full text-lg font-semibold hover:bg-orange-50 transition-all duration-300 ease-in-out shadow-md hover:shadow-lg transform hover:scale-105 font-inter">
+                            Find Talent
+                        </button>
+                    </Link>
                 </div>
             </div>
         </section>
