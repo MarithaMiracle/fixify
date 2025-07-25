@@ -1,16 +1,14 @@
-// src/app/providers/[id]/page.tsx
-"use client"; // <<< ABSOLUTELY ESSENTIAL: MUST BE THE FIRST LINE
+"use client";
 
 import React from 'react';
-import Link from 'next/link'; // For client-side navigation
-import { useParams } from 'next/navigation'; // Hook to get dynamic route parameters
+import Link from 'next/link';
+import { useParams } from 'next/navigation';
 
-// Lucide Icons (ensure these are imported correctly in your project)
 import { Star, MapPin, Clock, MessageSquareText, Image, ClipboardList } from 'lucide-react';
 
 // Define the type for the dynamic parameters received by the page component
 interface ProviderProfilePageParams {
-    id: string; // The dynamic ID from the URL (e.g., 'sarah-adebayo')
+    id: string;
 }
 
 // Define the overall props for the ProviderProfilePage component
@@ -18,17 +16,11 @@ interface ProviderProfilePageProps {
     params: ProviderProfilePageParams;
 }
 
-// Default export of the page component, as required by Next.js App Router
 export default function ProviderProfilePage({ params }: ProviderProfilePageProps) {
-    // Extract the dynamic 'id' from the URL parameters
+    
     const { id: providerId } = params;
 
-    // --- Dummy Data for a Service Provider ---
-    // In a real application, you would fetch this data from your backend
-    // using `providerId` (e.g., `fetch(`/api/providers/${providerId}`)`).
-    // For this demo, we'll construct a dummy provider based on the ID.
     const provider = {
-        // Dynamically generate a name from the ID (e.g., 'michael-eze' -> 'Michael Eze')
         name: providerId.split('-').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' '),
         category: "Professional Makeup Artist", // Placeholder category
         location: "Lagos, Nigeria",
@@ -61,7 +53,7 @@ export default function ProviderProfilePage({ params }: ProviderProfilePageProps
 
     return (
         <div className="min-h-screen flex flex-col bg-gray-50">
-            <main className="flex-grow pt-24 pb-12"> {/* Adjusted pt- to account for Navbar */}
+            <main className="flex-grow pt-24 pb-12">
                 <div className="container mx-auto px-6">
                     {/* Provider Header Section */}
                     <section className="bg-white p-6 md:p-8 rounded-xl shadow-md border border-gray-100 mb-8 text-center relative overflow-hidden">

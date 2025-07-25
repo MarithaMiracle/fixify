@@ -1,16 +1,15 @@
-// src/app/auth/page.tsx
-"use client"; // This component uses client-side React Hooks
+"use client";
 
 import React, { useState } from 'react';
 import { User, Briefcase, Settings } from 'lucide-react';
-import { useAuth } from '../../contexts/AuthContext'; // Import useAuth hook
+import { useAuth } from '../../contexts/AuthContext';
 
-export default function AuthPage() { // Renamed from LoginPage for clarity if using /auth route
+export default function AuthPage() {
     const [selectedRole, setSelectedRole] = useState('user');
-    const { login } = useAuth(); // Get the login function from context
+    const { login } = useAuth();
 
     const handleSimulateLogin = () => {
-        login(selectedRole); // Call the login function from context
+        login(selectedRole);
     };
 
     return (

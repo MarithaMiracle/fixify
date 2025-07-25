@@ -1,15 +1,13 @@
-// src/app/services/page.tsx
-"use client"; // This component uses client-side hooks (useState)
+"use client";
 
 import React, { useState } from 'react';
-import Link from 'next/link'; // IMPORTED: Link component for client-side navigation
+import Link from 'next/link';
 import { Home, Shirt, Utensils, HeartHandshake, Scissors, Laptop,
-    Package, BookOpen, Camera, PawPrint, ChevronRight, ChevronUp, ChevronDown } from 'lucide-react'; // Lucide Icons
+    Package, BookOpen, Camera, PawPrint, ChevronRight, ChevronUp, ChevronDown } from 'lucide-react';
 
-// CategoryCard component (nested within ServiceCategoriesPage for this file's context)
 const CategoryCard = ({ category }: { category: { name: string; icon: React.ReactNode; description: string; } }) => {
     // Determine the accent color based on category name for unique tints
-    const getCategoryColorClasses = (name: string) => { // Corrected type for 'name'
+    const getCategoryColorClasses = (name: string) => {
         switch (name) {
             case "Home & Repairs": return "bg-[#F0F8FF] text-[#2563EB] border-[#F0F8FF]"; // blue-50, blue-600
             case "Cleaning & Laundry": return "bg-[#F5F5FC] text-[#7C3AED] border-[#F5F5FC]"; // lavender-50, purple-600
@@ -39,7 +37,6 @@ const CategoryCard = ({ category }: { category: { name: string; icon: React.Reac
             </div>
             <h3 className="text-xl font-semibold text-gray-800 mb-2 font-poppins">{category.name}</h3>
             <p className="text-gray-600 text-sm font-inter">{category.description}</p>
-            {/* CORRECTED: Use Link for navigation to search page */}
             <Link href={`/search?category=${encodeURIComponent(category.name)}`} className={`font-semibold mt-4 ${textColorForElements} hover:underline transition-colors`}>
                 Explore Services →
             </Link>
@@ -49,8 +46,6 @@ const CategoryCard = ({ category }: { category: { name: string; icon: React.Reac
 
 // SidebarFilter component (nested within ServiceCategoriesPage)
 const SidebarFilter = () => {
-    // In a full implementation, this might fetch categories dynamically
-    // For now, it's a placeholder with basic structure.
     const categories = [
         { name: "Home & Repairs", subCategories: ["Plumbing", "Electrical", "Painting", "Carpentry"] },
         { name: "Cleaning & Laundry", subCategories: ["Home Cleaning", "Office Cleaning", "Dry Cleaning", "Carpet Cleaning"] },
@@ -64,17 +59,15 @@ const SidebarFilter = () => {
         { name: "Lifestyle & Pet Care", subCategories: ["Pet Grooming", "Home Spa", "Wellness Coaching"] },
     ];
 
-    const [openCategory, setOpenCategory] = useState<string | null>(null); // State to manage expandable categories
+    const [openCategory, setOpenCategory] = useState<string | null>(null);
 
-    const toggleCategory = (categoryName: string) => { // Corrected type for categoryName
+    const toggleCategory = (categoryName: string) => {
         setOpenCategory(openCategory === categoryName ? null : categoryName);
     };
 
     // Placeholder for actual category selection logic
     const handleSelectCategory = (subCategory: string) => {
         console.log(`Selected: ${subCategory}`);
-        // In a real app, this would filter results or navigate
-        // For now, it just logs, the Link component handles the navigation.
     };
 
     return (
@@ -98,7 +91,6 @@ const SidebarFilter = () => {
                             <ul className="ml-4 mt-2 space-y-2">
                                 {category.subCategories.map((sub, subIndex) => (
                                     <li key={subIndex}>
-                                        {/* CORRECTED: Use Link for navigation to search page */}
                                         <Link href={`/search?category=${encodeURIComponent(sub)}`} className="text-gray-600 hover:text-[#cc6500] text-sm transition-colors font-inter">
                                             {sub}
                                         </Link>

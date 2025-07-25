@@ -1,11 +1,10 @@
-// src/app/auth/page.tsx
-"use client"; // IMPORTANT: This component uses client-side React Hooks
+"use client";
 
-import React, { useState, useEffect } from 'react'; // Added useEffect for potential redirect
-import Link from 'next/link'; // IMPORTANT: For client-side navigation
+import React, { useState, useEffect } from 'react';
+import Link from 'next/link';
 import { User, Briefcase, Settings, Mail, Phone, Lock, Eye, EyeOff, Smartphone } from 'lucide-react';
-import { useAuth } from '../../contexts/AuthContext'; // CORRECTED PATH: Use alias or correct relative path
-import { useRouter } from 'next/navigation'; // REQUIRED: For direct client-side navigation
+import { useAuth } from '../../contexts/AuthContext';
+import { useRouter } from 'next/navigation';
 
 export default function AuthPage() {
     const [isSignUp, setIsSignUp] = useState(true); // true for Sign Up, false for Sign In
@@ -21,16 +20,13 @@ export default function AuthPage() {
     const [confirmPassword, setConfirmPassword] = useState('');
     const [otp, setOtp] = useState('');
 
-    const { isAuthenticated, login } = useAuth(); // Get isAuthenticated state and login function from AuthContext
-    const router = useRouter(); // Initialize useRouter
+    const { isAuthenticated, login } = useAuth();
+    const router = useRouter();
 
     // Effect to redirect if already authenticated and trying to access auth page
     useEffect(() => {
         if (isAuthenticated) {
-            // Determine appropriate dashboard based on userRole if needed, or simply redirect home
-            // The login function in AuthContext already handles redirection, so this is for cases
-            // where user directly types /auth while already logged in.
-            const storedRole = localStorage.getItem('fixify_user_role'); // Check localStorage directly for immediate redirect
+            const storedRole = localStorage.getItem('fixify_user_role');
             if (storedRole === 'user') {
                 router.replace('/dashboard');
             } else if (storedRole === 'provider') {
@@ -38,51 +34,41 @@ export default function AuthPage() {
             } else if (storedRole === 'admin') {
                 router.replace('/admin');
             } else {
-                router.replace('/'); // Fallback
+                router.replace('/');
             }
         }
-    }, [isAuthenticated, router]); // Dependency on isAuthenticated and router
+    }, [isAuthenticated, router]);
 
     const handleToggleAuthMode = () => {
         setIsSignUp(!isSignUp);
-        setCurrentAuthFlow('main'); // Reset flow when switching mode
-        // Clear form fields
+        setCurrentAuthFlow('main');
         setFullName(''); setEmail(''); setPhone(''); setPassword(''); setConfirmPassword(''); setOtp('');
     };
 
-    const handleSignUp = (e: React.FormEvent) => { // Use React.FormEvent for event typing
+    const handleSignUp = (e: React.FormEvent) => {
         e.preventDefault();
         console.log("Simulating Sign Up Data:", { fullName, email, phone, password, confirmPassword, userType });
-        // In a real app: call API to create user.
-        // On successful API response:
-        // 1. If email verification is needed, set currentAuthFlow('verify-email-phone');
-        // 2. If no verification, directly login the user:
-        login(userType); // CRUCIAL: Call login from AuthContext
+        login(userType);
     };
 
-    const handleSignIn = (e: React.FormEvent) => { // Use React.FormEvent for event typing
+    const handleSignIn = (e: React.FormEvent) => {
         e.preventDefault();
         console.log("Simulating Sign In Data:", { email, password, userType });
-        // In a real app: call API to authenticate user.
-        // On successful API response:
-        login(userType); // CRUCIAL: Call login from AuthContext
+        login(userType);
     };
 
-    const handleForgotPassword = (e: React.FormEvent) => { // Use React.FormEvent for event typing
+    const handleForgotPassword = (e: React.FormEvent) => {
         e.preventDefault();
         console.log("Forgot Password Email:", email);
-        // In a real app: call API to send reset link
-        alert("Password reset link simulated sent to your email!"); // Using alert for demo effect
-        setCurrentAuthFlow('main'); // Go back to main sign in after sending link
+        alert("Password reset link simulated sent to your email!");
+        setCurrentAuthFlow('main');
     };
 
-    const handleVerifyOtp = (e: React.FormEvent) => { // Use React.FormEvent for event typing
+    const handleVerifyOtp = (e: React.FormEvent) => {
         e.preventDefault();
         console.log("OTP Verification:", otp);
-        // In a real app: call API to verify OTP
-        alert("Account simulated verified successfully!"); // Using alert for demo effect
-        // After verification, you would typically login the user or redirect them to login page
-        login(userType); // Assuming verification leads directly to login
+        alert("Account simulated verified successfully!");
+        login(userType);
     };
 
 
@@ -346,7 +332,6 @@ export default function AuthPage() {
     };
 
     return (
-        // Removed duplicated Navbar and Footer, they are provided by layout.tsx
         <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
             <div className="bg-white p-6 md:p-8 rounded-xl shadow-lg border border-gray-100 max-w-md w-full">
                 {renderAuthForm()}

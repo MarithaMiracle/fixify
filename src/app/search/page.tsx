@@ -1,17 +1,16 @@
-// src/app/search/page.tsx
-"use client"; // This component uses client-side hooks
+"use client";
 
 import React, { useState } from 'react';
-import Link from 'next/link'; // IMPORTED: Link for client-side navigation
+import Link from 'next/link';
 import { Star, MapPin, Search, SlidersHorizontal, Sparkles } from 'lucide-react';
 
 // Define the type for a Provider for better type safety
 interface Provider {
-    id: number | string; // Provider ID can be number or string (e.g., 'sarah-adebayo')
+    id: number | string;
     name: string;
     category: string;
     avatar: string;
-    rating: number; // Corrected type
+    rating: number;
     reviews: number;
     badges: string[];
     price: number;
@@ -50,7 +49,6 @@ const ProviderCard = ({ provider }: { provider: Provider }) => {
                 </div>
                 <p className="text-gray-800 text-lg font-bold font-poppins">From ₦{provider.price.toLocaleString()}</p>
                 <div className="mt-4">
-                    {/* CORRECTED: Link to the dynamic Provider Profile Page */}
                     <Link href={`/providers/${provider.id}`} passHref>
                         <button className="bg-[#cc6500] text-white px-6 py-2 rounded-full text-md font-semibold hover:bg-[#a95500] transition-all duration-300 ease-in-out shadow-md">
                             View Profile
@@ -71,7 +69,6 @@ const FilterSidebar = () => {
 
     const handleApplyFilters = () => {
         console.log("Applying Filters:", { priceRange, selectedRating, availabilityDate, genderPreference });
-        // In a real app, this would trigger a search/filter on the backend or data set
     };
 
     const handleClearFilters = () => {
@@ -201,12 +198,11 @@ const FilterSidebar = () => {
     );
 };
 
-// Default exported SearchResultsPage
 export default function SearchResultsPage() {
     // Dummy data for service providers
-    const providers: Provider[] = [ // Added type annotation for providers array
+    const providers: Provider[] = [
         {
-            id: 'michael-eze', // Changed to string for consistency with dynamic routing
+            id: 'michael-eze',
             name: "Michael Eze",
             category: "Plumbing Specialist",
             avatar: "https://placehold.co/96x96/ccddee/333333?text=ME",

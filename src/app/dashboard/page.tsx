@@ -1,16 +1,14 @@
-// src/app/dashboard/user/page.tsx
-"use client"; // This page uses client-side hooks like useState, useEffect, etc.
-
+"use client";
 import React, { useState } from 'react';
-import Link from 'next/link'; // IMPORTED: Link for client-side navigation
+import Link from 'next/link';
 import {
     Star, MapPin, Sparkles, Calendar, History, Wallet, User, FileText, LogOut, ClipboardList, ClipboardCheck, Users
 } from 'lucide-react';
-import { useAuth } from '@/contexts/AuthContext'; // Make sure this path is correct based on your setup
+import { useAuth } from '@/contexts/AuthContext';
 
 export default function UserDashboardPage() {
     const [activeSection, setActiveSection] = useState('upcoming');
-    const { logout, userRole } = useAuth(); // USED: logout function from useAuth()
+    const { logout, userRole } = useAuth();
 
     // Dummy Data for User Dashboard
     const user = {
@@ -46,7 +44,7 @@ export default function UserDashboardPage() {
     const [profileEmail, setProfileEmail] = useState("jane.doe@example.com");
     const [profilePhone, setProfilePhone] = useState("08012345678");
 
-    const handleProfileUpdate = (e: React.FormEvent) => { // Corrected type for event
+    const handleProfileUpdate = (e: React.FormEvent) => {
         e.preventDefault();
         console.log("Profile Updated:", { profileName, profileEmail, profilePhone });
         alert("Profile updated successfully!"); // Placeholder

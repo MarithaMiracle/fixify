@@ -1,16 +1,10 @@
-// src/app/layout.tsx
-// This file is a SERVER COMPONENT by default. DO NOT add "use client"; here.
-
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
-import "./globals.css"; // Your global CSS for Tailwind and other styles
+import "./globals.css";
 
-// CORRECTED PATHS: Use correct relative paths or your configured aliases (e.g., '@/components/Navbar')
-import Navbar from "./components/Navbar"; // Assuming components is in src/components, sibling to src/app
-import Footer from "./components/Footer"; // Assuming components is in src/components, sibling to src/app
-
-// Ensure correct path for AuthProvider
-import { AuthProvider } from "../contexts/AuthContext"; // Assuming contexts is in src/contexts, sibling to src/app
+import Navbar from "./components/Navbar"; 
+import Footer from "./components/Footer";
+import { AuthProvider } from "../contexts/AuthContext"; 
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -31,11 +25,10 @@ export const metadata: Metadata = {
     title: "Fixify - Book Trusted Local Service Providers Instantly in Nigeria",
     description:
       "Fixify is Nigeria’s go-to platform for booking reliable service providers — from handymen and electricians to makeup artists, caterers, tailors, and more.",
-    url: "https://fixify-maritha.vercel.app/", // replace with your actual domain
-    siteName: "Fixify",
+    url: "https://fixify-maritha.vercel.app/",
     images: [
       {
-        url: "https://fixify-maritha.vercel.app/fixify.png", // replace with your actual image URL
+        url: "https://fixify-maritha.vercel.app/fixify.png",
         width: 1200,
         height: 630,
         alt: "Fixify - Nigeria's Trusted Services Platform",
@@ -48,7 +41,7 @@ export const metadata: Metadata = {
     title: "Fixify – Nigeria’s Trusted Services Platform",
     description:
       "Book trusted service providers across Nigeria. Instant access to reliable home, beauty, catering, and fashion services.",
-    images: ["https://fixify-maritha.vercel.app/fixify.png"], // same image URL
+    images: ["https://fixify-maritha.vercel.app/fixify.png"],
   },
 };
 
