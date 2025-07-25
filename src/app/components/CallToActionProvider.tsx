@@ -16,7 +16,7 @@ const CallToActionProvider = () => {
                         <p className="text-gray-700 mb-6 text-base sm:text-lg font-inter leading-relaxed">
                             Grow your business and reach more customers. Join our network of top-rated professionals today.
                         </p>
-                        {/* ONLY CHANGE: Replaced button with Link wrapping a button, linking to auth page */}
+                        
                         <Link href="/auth?type=signup&role=provider" passHref>
                             <button className="bg-[#cc5500] text-white font-semibold px-6 py-3 sm:px-8 sm:py-3 rounded-full hover:bg-[#cc4500] transition-all duration-300 ease-in-out shadow-lg hover:shadow-xl transform hover:scale-105 font-inter">
                                 Join Fixify →

@@ -49,6 +49,12 @@ const FeaturedCategories: React.FC = () => {
         }
     };
 
+    const handleCategoryClick = (categoryName: string) => {
+        // Debug logging
+        console.log('Category clicked:', categoryName);
+        console.log('Encoded URL:', encodeURIComponent(categoryName));
+    };
+
     return (
         <section className="py-20 bg-white">
             <div className="container mx-auto px-6">
@@ -68,12 +74,31 @@ const FeaturedCategories: React.FC = () => {
                             </div>
                             <h3 className="text-xl font-semibold text-gray-800 mb-2 font-poppins">{category.name}</h3>
                             <p className="text-gray-600 mb-4 font-inter">{category.description}</p>
+                            
+                            {/* Multiple link options - try both approaches */}
+                            
+                            {/* Option 1: Standard href string */}
                             <Link 
                                 href={`/search?category=${encodeURIComponent(category.name)}`}
-                                className="text-[#cc5500] font-semibold hover:text-[#a95500] transition-colors font-inter inline-block"
+                                onClick={() => handleCategoryClick(category.name)}
+                                className="text-[#cc5500] font-semibold hover:text-[#a95500] transition-colors font-inter inline-block mr-4"
                             >
                                 Learn More →
                             </Link>
+                            
+                            {/* Option 2: Object format (backup) - uncomment if needed */}
+                            {/*
+                            <Link 
+                                href={{
+                                    pathname: '/search',
+                                    query: { category: category.name }
+                                }}
+                                onClick={() => handleCategoryClick(category.name)}
+                                className="text-[#cc5500] font-semibold hover:text-[#a95500] transition-colors font-inter inline-block"
+                            >
+                                Learn More (Alt) →
+                            </Link>
+                            */}
                         </div>
                     ))}
                 </div>
