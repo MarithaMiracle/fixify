@@ -51,9 +51,9 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         // Redirect to the appropriate dashboard
         let redirectPath = '/';
         if (role === 'user') {
-            redirectPath = '/dashboard/user';
+            redirectPath = '/dashboard';
         } else if (role === 'provider') {
-            redirectPath = '/dashboard/provider';
+            redirectPath = '/provider-dashboard';
         } else if (role === 'admin') {
             redirectPath = '/admin';
         }

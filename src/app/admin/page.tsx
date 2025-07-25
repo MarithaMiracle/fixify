@@ -6,9 +6,6 @@ import {
     LayoutDashboard, Users, UserCog, Briefcase, CalendarCheck, Banknote, MessageSquareText, Check, Eye, Trash2, Edit, DollarSign, Ban, RefreshCcw, BellRing, LogOut, ClipboardList
 } from 'lucide-react';
 
-import Navbar from '../components/Navbar';
-import Footer from '../components/Footer';
-
 export default function AdminDashboardPage() {
     const [activeSection, setActiveSection] = useState('overview');
 
@@ -431,7 +428,6 @@ export default function AdminDashboardPage() {
         <>
 
             <div className="min-h-screen flex flex-col bg-gray-50">
-                <Navbar />
                 <main className="flex-grow pt-24 pb-12">
                     <div className="container mx-auto px-6">
                         {/* Admin Dashboard Header */}
@@ -536,7 +532,6 @@ export default function AdminDashboardPage() {
                         </div>
                     </div>
                 </main>
-                <Footer />
             </div>
         </>
     );

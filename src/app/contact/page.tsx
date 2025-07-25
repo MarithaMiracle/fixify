@@ -89,13 +89,13 @@ export default function ContactUsPage() {
                                     </div>
 
                                     {/* Google Map Embed Placeholder */}
-                                    <div className="bg-gray-50 rounded-xl shadow-md border border-gray-100 overflow-hidden" style={{ height: '300px' }}>
+                                    <div className="bg-gray-50 rounded-xl shadow-md border border-gray-100 overflow-hidden" style={{ height: '400px' }}>
                                         <iframe
                                         src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d1982.5361744205984!2d3.417146216463819!3d6.426986195341365!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x103bf44baf2a2cb1%3A0x9095c93f0864621f!2sVictoria+Island%2C+Lagos!5e0!3m2!1sen!2sng!4v1696007015000!5m2!1sen!2sng"
                                         width="100%"
                                         height="100%"
                                         style={{ border: 0 }}
-                                        allowFullScreen=""
+                                        allowFullScreen={false}
                                         loading="lazy"
                                         referrerPolicy="no-referrer-when-downgrade"
                                     ></iframe>

@@ -3,7 +3,7 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
 import { Home, Shirt, Utensils, HeartHandshake, Scissors, Laptop,
-    Package, BookOpen, Camera, PawPrint, ChevronRight, ChevronUp, ChevronDown } from 'lucide-react';
+    Package, BookOpen, Camera, PawPrint, ChevronRight } from 'lucide-react';
 
 const CategoryCard = ({ category }: { category: { name: string; icon: React.ReactNode; description: string; } }) => {
     // Determine the accent color based on category name for unique tints

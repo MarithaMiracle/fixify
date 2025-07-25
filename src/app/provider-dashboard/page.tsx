@@ -1,85 +1,125 @@
 "use client";
 
 import React, { useState } from 'react';
+import Link from 'next/link';
 
 import {
     X, Star, Phone, MapPin, Sparkles, DollarSign, Calendar, User, LogOut, MessageSquareText,
     Briefcase, CalendarCheck, Banknote, ListPlus, Edit, Trash2, Check, ExternalLink,
-    BadgeCheck
-} from 'lucide-react';
+    BadgeCheck } from 'lucide-react';
 
-import Navbar from '../components/Navbar';
-import Footer from '../components/Footer';
+import { useAuth } from '../../contexts/AuthContext';
+
+interface Service {
+    id: number;
+    name: string;
+    price: string;
+    description: string;
+}
+
+interface Booking {
+    id: number;
+    clientName: string;
+    service: string;
+    date: string;
+    time: string;
+    status: 'Pending' | 'Confirmed';
+    contact: string;
+    address: string;
+}
+
+interface Payout {
+    id: number;
+    date: string;
+    amount: string;
+    status: string;
+}
+
+interface Review {
+    id: number;
+    clientName: string;
+    rating: number;
+    date: string;
+    text: string;
+    responded: boolean;
+}
+
+interface Provider {
+    name: string;
+    category: string;
+    profileImage: string;
+    pendingEarnings: string;
+    uid: string;
+    isVerified: boolean;
+}
 
 export default function ProviderDashboardPage() {
-    const [activeSection, setActiveSection] = useState('bookings');
+    const [activeSection, setActiveSection] = useState<string>('bookings');
+    const { logout } = useAuth();
 
-    // Dummy Data for Service Provider Dashboard
-    const provider = {
+    const provider: Provider = {
         name: "Aisha Mohammed",
         category: "Professional Caterer",
         profileImage: "https://placehold.co/100x100/f0e0f7/000000?text=AM",
         pendingEarnings: "₦185,000",
-        uid: "provider_xyz789uvw012", // Provider ID for display (important for Firestore)
+        uid: "aisha-mohammed",
         isVerified: true
     };
 
-    const myServices = [
+    const myServices: Service[] = [
         { id: 1, name: "Birthday Catering (Small)", price: "₦100,000", description: "Catering for up to 30 guests." },
         { id: 2, name: "Wedding Catering (Standard)", price: "₦350,000", description: "Full catering for up to 100 guests, 3-course meal." },
         { id: 3, name: "Finger Foods & Snacks", price: "₦50,000", description: "Assorted small chops for events." },
     ];
 
-    const upcomingBookings = [
+    const upcomingBookings: Booking[] = [
         { id: 1, clientName: "Funke Adekunle", service: "Birthday Catering (Small)", date: "Aug 25, 2024", time: "05:00 PM", status: "Pending", contact: "09012345678", address: "15 Palm Drive, Lagos" },
         { id: 2, clientName: "Chike Obi", service: "Finger Foods & Snacks", date: "Sep 10, 2024", time: "11:00 AM", status: "Confirmed", contact: "08011223344", address: "789 Pine St, Lagos" },
     ];
 
-    const pastPayouts = [
+    const pastPayouts: Payout[] = [
         { id: 201, date: "Jul 15, 2024", amount: "₦120,000", status: "Completed" },
         { id: 202, date: "Jun 01, 2024", amount: "₦80,000", status: "Completed" },
     ];
 
-    const customerReviews = [
+    const customerReviews: Review[] = [
         { id: 301, clientName: "Ngozi E.", rating: 5, date: "Jul 28, 2024", text: "Aisha's catering was phenomenal! Everything was delicious and beautifully presented. Highly recommend her for any event.", responded: false },
         { id: 302, clientName: "Tunde B.", rating: 4, date: "Jul 10, 2024", text: "Great service, food was tasty. A bit late with setup but overall good experience.", responded: true },
     ];
 
-    const handleProfileUpdate = (e: { preventDefault: () => void; }) => {
+    const handleProfileUpdate = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         console.log("Profile Updated for Provider");
-        alert("Provider profile updated successfully!"); // Placeholder
+        alert("Provider profile updated successfully!");
     };
 
     const handleAddService = () => {
-        alert("Add New Service functionality triggered!"); // Placeholder
+        alert("Add New Service functionality triggered!");
     };
 
     const handleEditService = (id: number) => {
-        alert(`Edit Service with ID: ${id}`); // Placeholder
+        alert(`Edit Service with ID: ${id}`);
     };
 
     const handleDeleteService = (id: number) => {
-        if (confirm(`Are you sure you want to delete service with ID: ${id}?`)) { // Using confirm for simple demo
-            alert(`Service with ID: ${id} deleted!`); // Placeholder
+        if (confirm(`Are you sure you want to delete service with ID: ${id}?`)) {
+            alert(`Service with ID: ${id} deleted!`);
         }
     };
 
     const handleAcceptBooking = (id: number) => {
-        alert(`Booking request ${id} accepted!`); // Placeholder
+        alert(`Booking request ${id} accepted!`);
     };
 
     const handleDeclineBooking = (id: number) => {
-        alert(`Booking request ${id} declined!`); // Placeholder
+        alert(`Booking request ${id} declined!`);
     };
 
-    const handleWithdrawEarnings = (e: { preventDefault: () => void; }) => {
+    const handleWithdrawEarnings = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        alert("Withdrawal request submitted!"); // Placeholder
+        alert("Withdrawal request submitted!");
     };
 
-
-    // Render content based on active section
     const renderContent = () => {
         switch (activeSection) {
             case 'profile-setup':
@@ -90,7 +130,7 @@ export default function ProviderDashboardPage() {
                             <p className="text-gray-700 mb-4 font-inter">
                                 Welcome to Fixify! Let's get your profile set up so you can start receiving bookings.
                             </p>
-                            <form className="space-y-4">
+                            <form className="space-y-4" onSubmit={handleProfileUpdate}>
                                 <div>
                                     <label className="block text-gray-700 text-sm font-semibold mb-2 font-inter">Service Category</label>
                                     <select className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-[#cc6500] font-inter">
@@ -262,7 +302,11 @@ export default function ProviderDashboardPage() {
                                                 src={`https://placehold.co/40x40/f3e5f5/9c27b0?text=${review.clientName.split(' ')[0][0]}${review.clientName.split(' ')[1][0]}`}
                                                 alt={`${review.clientName}'s avatar`}
                                                 className="w-10 h-10 rounded-full object-cover mr-3 shadow-sm"
-                                                onError={(e) => { e.target.onerror = null; e.target.src = "https://placehold.co/40x40/cccccc/ffffff?text=User"; }}
+                                                onError={(e: React.SyntheticEvent<HTMLImageElement, Event>) => { 
+                                                    const target = e.target as HTMLImageElement;
+                                                    target.onerror = null; 
+                                                    target.src = "https://placehold.co/40x40/cccccc/ffffff?text=User"; 
+                                                }}
                                             />
                                             <div>
                                                 <p className="font-semibold text-gray-800 font-poppins">{review.clientName}</p>
@@ -317,7 +361,6 @@ export default function ProviderDashboardPage() {
                                     <option value="">Select an account</option>
                                     <option value="GTBank-1234">GTBank - ****1234 (Savings)</option>
                                     <option value="ZenithBank-5678">Zenith Bank - ****5678 (Current)</option>
-                                    {/* Add more bank accounts dynamically */}
                                 </select>
                                 <p className="text-sm text-gray-500 mt-2 font-inter">Ensure your bank account details are up-to-date in your profile settings.</p>
                             </div>
@@ -333,122 +376,123 @@ export default function ProviderDashboardPage() {
     };
 
     return (
-        <>
-
-            <div className="min-h-screen flex flex-col bg-gray-50">
-                <Navbar />
-                <main className="flex-grow pt-24 pb-12">
-                    <div className="container mx-auto px-6">
-                        {/* Dashboard Header */}
-                        <div className="bg-white p-6 md:p-8 rounded-xl shadow-md border border-gray-100 mb-8 flex flex-col sm:flex-row items-center justify-between text-center sm:text-left">
-                            <div className="flex flex-col sm:flex-row items-center">
-                                <img
-                                    src={provider.profileImage}
-                                    alt={`${provider.name}'s profile`}
-                                    className="w-24 h-24 rounded-full object-cover border-4 border-white shadow-lg mb-4 sm:mb-0 sm:mr-6"
-                                    onError={(e) => { e.target.onerror = null; e.target.src = "https://placehold.co/100x100/cccccc/ffffff?text=Provider"; }}
-                                />
-                                <div>
-                                    <h1 className="text-3xl font-bold text-gray-900 mb-1 font-poppins">Welcome, {provider.name}!</h1>
-                                    <p className="text-gray-600 text-sm font-inter">Manage your services and earnings.</p>
-                                    <p className="text-gray-500 text-xs mt-1 font-inter">Provider ID: <span className="font-mono text-gray-700">{provider.uid}</span></p>
-                                    {provider.isVerified ? (
-                                        <p className="text-green-600 text-sm flex items-center gap-1 mt-1">
-                                            <BadgeCheck className="w-4 h-4" /> Verified Provider
-                                        </p>
-                                    ) : (
-                                        <p className="text-yellow-600 text-sm flex items-center gap-1 mt-1">
-                                            <Sparkles className="w-4 h-4" /> Not Verified (Complete Profile)
-                                        </p>
-                                    )}
-                                </div>
-                            </div>
-                            <div className="mt-6 sm:mt-0">
-                                <a href="#" className="bg-[#cc6500] text-white px-6 py-3 rounded-full text-md font-semibold hover:bg-[#a95500] transition-colors shadow-md flex items-center gap-2">
-                                    <ExternalLink className="w-5 h-5" /> View Public Profile
-                                </a>
+        <div className="min-h-screen flex flex-col bg-gray-50">
+            <main className="flex-grow pt-24 pb-12">
+                <div className="container mx-auto px-6">
+                    {/* Dashboard Header */}
+                    <div className="bg-white p-6 md:p-8 rounded-xl shadow-md border border-gray-100 mb-8 flex flex-col sm:flex-row items-center justify-between text-center sm:text-left">
+                        <div className="flex flex-col sm:flex-row items-center">
+                            <img
+                                src={provider.profileImage}
+                                alt={`${provider.name}'s profile`}
+                                className="w-24 h-24 rounded-full object-cover border-4 border-white shadow-lg mb-4 sm:mb-0 sm:mr-6"
+                                onError={(e: React.SyntheticEvent<HTMLImageElement, Event>) => { 
+                                    const target = e.target as HTMLImageElement;
+                                    target.onerror = null; 
+                                    target.src = "https://placehold.co/100x100/cccccc/ffffff?text=Provider"; 
+                                }}
+                            />
+                            <div>
+                                <h1 className="text-3xl font-bold text-gray-900 mb-1 font-poppins">Welcome, {provider.name}!</h1>
+                                <p className="text-gray-600 text-sm font-inter">Manage your services and earnings.</p>
+                                <p className="text-gray-500 text-xs mt-1 font-inter">Provider ID: <span className="font-mono text-gray-700">{provider.uid}</span></p>
+                                {provider.isVerified ? (
+                                    <p className="text-green-600 text-sm flex items-center gap-1 mt-1">
+                                        <BadgeCheck className="w-4 h-4" /> Verified Provider
+                                    </p>
+                                ) : (
+                                    <p className="text-yellow-600 text-sm flex items-center gap-1 mt-1">
+                                        <Sparkles className="w-4 h-4" /> Not Verified (Complete Profile)
+                                    </p>
+                                )}
                             </div>
                         </div>
-
-                        <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
-                            {/* Sidebar Navigation */}
-                            <div className="lg:col-span-1 bg-white p-6 rounded-xl shadow-md border border-gray-100 h-fit sticky top-24">
-                                <ul className="space-y-2">
-                                    <li className="mb-4 text-gray-500 text-xs uppercase font-semibold font-inter tracking-wider">Navigation</li>
-                                    <li>
-                                        <button
-                                            onClick={() => setActiveSection('profile-setup')}
-                                            className={`w-full text-left flex items-center gap-3 px-4 py-3 rounded-lg font-semibold transition-colors duration-200 ease-in-out font-inter
-                                                ${activeSection === 'profile-setup' ? 'bg-[#ffedd5] text-[#cc6500]' : 'text-gray-700 hover:bg-gray-100'}`}
-                                        >
-                                            <User className="w-5 h-5" /> Profile Setup Wizard
-                                        </button>
-                                    </li>
-                                    <li>
-                                        <button
-                                            onClick={() => setActiveSection('my-services')}
-                                            className={`w-full text-left flex items-center gap-3 px-4 py-3 rounded-lg font-semibold transition-colors duration-200 ease-in-out font-inter
-                                                ${activeSection === 'my-services' ? 'bg-[#ffedd5] text-[#cc6500]' : 'text-gray-700 hover:bg-gray-100'}`}
-                                        >
-                                            <Briefcase className="w-5 h-5" /> My Services & Pricing
-                                        </button>
-                                    </li>
-                                    <li>
-                                        <button
-                                            onClick={() => setActiveSection('bookings')}
-                                            className={`w-full text-left flex items-center gap-3 px-4 py-3 rounded-lg font-semibold transition-colors duration-200 ease-in-out font-inter
-                                                ${activeSection === 'bookings' ? 'bg-[#ffedd5] text-[#cc6500]' : 'text-gray-700 hover:bg-gray-100'}`}
-                                        >
-                                            <CalendarCheck className="w-5 h-5" /> Calendar & Bookings
-                                        </button>
-                                    </li>
-                                    <li>
-                                        <button
-                                            onClick={() => setActiveSection('payouts')}
-                                            className={`w-full text-left flex items-center gap-3 px-4 py-3 rounded-lg font-semibold transition-colors duration-200 ease-in-out font-inter
-                                                ${activeSection === 'payouts' ? 'bg-[#ffedd5] text-[#cc6500]' : 'text-gray-700 hover:bg-gray-100'}`}
-                                        >
-                                            <Banknote className="w-5 h-5" /> Payment Payouts & History
-                                        </button>
-                                    </li>
-                                    <li>
-                                        <button
-                                            onClick={() => setActiveSection('reviews')}
-                                            className={`w-full text-left flex items-center gap-3 px-4 py-3 rounded-lg font-semibold transition-colors duration-200 ease-in-out font-inter
-                                                ${activeSection === 'reviews' ? 'bg-[#ffedd5] text-[#cc6500]' : 'text-gray-700 hover:bg-gray-100'}`}
-                                        >
-                                            <MessageSquareText className="w-5 h-5" /> Customer Reviews
-                                        </button>
-                                    </li>
-                                    <li>
-                                        <button
-                                            onClick={() => setActiveSection('withdraw')}
-                                            className={`w-full text-left flex items-center gap-3 px-4 py-3 rounded-lg font-semibold transition-colors duration-200 ease-in-out font-inter
-                                                ${activeSection === 'withdraw' ? 'bg-[#ffedd5] text-[#cc6500]' : 'text-gray-700 hover:bg-gray-100'}`}
-                                        >
-                                            <DollarSign className="w-5 h-5" /> Withdraw Earnings
-                                        </button>
-                                    </li>
-                                    <li className="mt-6 pt-4 border-t border-gray-200">
-                                        <button
-                                            onClick={() => alert("Logging out...")} // Placeholder for logout action
-                                            className="w-full text-left flex items-center gap-3 px-4 py-3 rounded-lg font-semibold text-red-600 hover:bg-red-50 transition-colors duration-200 ease-in-out font-inter"
-                                        >
-                                            <LogOut className="w-5 h-5" /> Logout
-                                        </button>
-                                    </li>
-                                </ul>
-                            </div>
-
-                            {/* Main Content Area */}
-                            <div className="lg:col-span-3 bg-white p-6 rounded-xl shadow-md border border-gray-100 min-h-[600px]">
-                                {renderContent()}
-                            </div>
+                        <div className="mt-6 sm:mt-0">
+                            <Link href={`/providers/${provider.uid}`} passHref>
+                                <button className="bg-[#cc6500] text-white px-6 py-3 rounded-full text-md font-semibold hover:bg-[#a95500] transition-colors shadow-md flex items-center gap-2">
+                                    <ExternalLink className="w-5 h-5" /> View Public Profile
+                                </button>
+                            </Link>
                         </div>
                     </div>
-                </main>
-                <Footer />
-            </div>
-        </>
+
+                    <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
+                        {/* Sidebar Navigation */}
+                        <div className="lg:col-span-1 bg-white p-6 rounded-xl shadow-md border border-gray-100 h-fit sticky top-24">
+                            <ul className="space-y-2">
+                                <li className="mb-4 text-gray-500 text-xs uppercase font-semibold font-inter tracking-wider">Navigation</li>
+                                <li>
+                                    <button
+                                        onClick={() => setActiveSection('profile-setup')}
+                                        className={`w-full text-left flex items-center gap-3 px-4 py-3 rounded-lg font-semibold transition-colors duration-200 ease-in-out font-inter
+                                            ${activeSection === 'profile-setup' ? 'bg-[#ffedd5] text-[#cc6500]' : 'text-gray-700 hover:bg-gray-100'}`}
+                                    >
+                                        <User className="w-5 h-5" /> Profile Setup Wizard
+                                    </button>
+                                </li>
+                                <li>
+                                    <button
+                                        onClick={() => setActiveSection('my-services')}
+                                        className={`w-full text-left flex items-center gap-3 px-4 py-3 rounded-lg font-semibold transition-colors duration-200 ease-in-out font-inter
+                                            ${activeSection === 'my-services' ? 'bg-[#ffedd5] text-[#cc6500]' : 'text-gray-700 hover:bg-gray-100'}`}
+                                    >
+                                        <Briefcase className="w-5 h-5" /> My Services & Pricing
+                                    </button>
+                                </li>
+                                <li>
+                                    <button
+                                        onClick={() => setActiveSection('bookings')}
+                                        className={`w-full text-left flex items-center gap-3 px-4 py-3 rounded-lg font-semibold transition-colors duration-200 ease-in-out font-inter
+                                            ${activeSection === 'bookings' ? 'bg-[#ffedd5] text-[#cc6500]' : 'text-gray-700 hover:bg-gray-100'}`}
+                                    >
+                                        <CalendarCheck className="w-5 h-5" /> Calendar & Bookings
+                                    </button>
+                                </li>
+                                <li>
+                                    <button
+                                        onClick={() => setActiveSection('payouts')}
+                                        className={`w-full text-left flex items-center gap-3 px-4 py-3 rounded-lg font-semibold transition-colors duration-200 ease-in-out font-inter
+                                            ${activeSection === 'payouts' ? 'bg-[#ffedd5] text-[#cc6500]' : 'text-gray-700 hover:bg-gray-100'}`}
+                                    >
+                                        <Banknote className="w-5 h-5" /> Payment Payouts & History
+                                    </button>
+                                </li>
+                                <li>
+                                    <button
+                                        onClick={() => setActiveSection('reviews')}
+                                        className={`w-full text-left flex items-center gap-3 px-4 py-3 rounded-lg font-semibold transition-colors duration-200 ease-in-out font-inter
+                                            ${activeSection === 'reviews' ? 'bg-[#ffedd5] text-[#cc6500]' : 'text-gray-700 hover:bg-gray-100'}`}
+                                    >
+                                        <MessageSquareText className="w-5 h-5" /> Customer Reviews
+                                    </button>
+                                </li>
+                                <li>
+                                    <button
+                                        onClick={() => setActiveSection('withdraw')}
+                                        className={`w-full text-left flex items-center gap-3 px-4 py-3 rounded-lg font-semibold transition-colors duration-200 ease-in-out font-inter
+                                            ${activeSection === 'withdraw' ? 'bg-[#ffedd5] text-[#cc6500]' : 'text-gray-700 hover:bg-gray-100'}`}
+                                    >
+                                        <DollarSign className="w-5 h-5" /> Withdraw Earnings
+                                    </button>
+                                </li>
+                                <li className="mt-6 pt-4 border-t border-gray-200">
+                                    <button
+                                        onClick={logout}
+                                        className="w-full text-left flex items-center gap-3 px-4 py-3 rounded-lg font-semibold text-red-600 hover:bg-red-50 transition-colors duration-200 ease-in-out font-inter"
+                                    >
+                                        <LogOut className="w-5 h-5" /> Logout
+                                    </button>
+                                </li>
+                            </ul>
+                        </div>
+
+                        {/* Main Content Area */}
+                        <div className="lg:col-span-3 bg-white p-6 rounded-xl shadow-md border border-gray-100 min-h-[600px]">
+                            {renderContent()}
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
     );
 }

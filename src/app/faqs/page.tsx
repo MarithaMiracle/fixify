@@ -3,8 +3,13 @@
 import React, { useState } from 'react';
 import { HelpCircle, ChevronDown, ChevronUp } from 'lucide-react';
 
+interface FAQItem {
+  question: string;
+  answer: string;
+}
+
 export default function FAQsPage() {
-    const faqs = [
+    const faqs: FAQItem[] = [
         {
             question: "How do I book a service on Fixify?",
             answer: "Booking a service is easy! Simply search for the service you need, browse available professionals, select your preferred date and time, and confirm your booking. Our multi-step booking flow guides you through every step."
@@ -27,45 +32,64 @@ export default function FAQsPage() {
         }
     ];
 
-    const [openIndex, setOpenIndex] = useState(null);
+    const [openIndex, setOpenIndex] = useState<number | null>(null);
 
-    const toggleFAQ = (index: number | React.SetStateAction<null>) => {
+    const toggleFAQ = (index: number) => {
         setOpenIndex(openIndex === index ? null : index);
     };
 
     return (
-        <>
-
-            <div className="min-h-screen flex flex-col bg-gray-50">
-                <main className="flex-grow pt-24 pb-12">
-                    <section className="py-16 bg-white">
-                        <div className="container mx-auto px-6 max-w-4xl">
-                            <h1 className="text-4xl md:text-5xl font-bold text-gray-900 text-center mb-8 font-poppins flex items-center justify-center gap-4">
-                                <HelpCircle className="w-10 h-10 text-[#cc6500]" /> Frequently Asked Questions
-                            </h1>
-                            <div className="space-y-4">
-                                {faqs.map((faq, index) => (
-                                    <div key={index} className="bg-gray-50 p-6 rounded-lg shadow-sm border border-gray-100">
-                                        <button
-                                            className="w-full text-left flex justify-between items-center font-semibold text-gray-900 text-lg font-poppins focus:outline-none"
-                                            onClick={() => toggleFAQ(index)}
-                                        >
-                                            {faq.question}
-                                            {openIndex === index ? <ChevronUp className="w-5 h-5 text-gray-700" /> : <ChevronDown className="w-5 h-5 text-gray-700" />}
-                                        </button>
-                                        {openIndex === index && (
-                                            <p className="mt-4 text-gray-700 leading-relaxed font-inter">{faq.answer}</p>
-                                        )}
+        <div className="min-h-screen flex flex-col bg-gray-50">
+            <main className="flex-grow pt-24 pb-12">
+                <section className="py-16 bg-white">
+                    <div className="container mx-auto px-6 max-w-4xl">
+                        <h1 className="text-4xl md:text-5xl font-bold text-gray-900 text-center mb-8 font-poppins flex items-center justify-center gap-4">
+                            <HelpCircle className="w-10 h-10 text-[#cc6500]" /> 
+                            Frequently Asked Questions
+                        </h1>
+                        
+                        <div className="space-y-4">
+                            {faqs.map((faq, index) => (
+                                <div 
+                                    key={index} 
+                                    className="bg-gray-50 p-6 rounded-lg shadow-sm border border-gray-100 transition-all duration-200"
+                                >
+                                    <button
+                                        className="w-full text-left flex justify-between items-center font-semibold text-gray-900 text-lg font-poppins focus:outline-none"
+                                        onClick={() => toggleFAQ(index)}
+                                        aria-expanded={openIndex === index}
+                                        aria-controls={`faq-${index}`}
+                                    >
+                                        <span>{faq.question}</span>
+                                        {openIndex === index ? 
+                                            <ChevronUp className="w-5 h-5 text-gray-700" /> : 
+                                            <ChevronDown className="w-5 h-5 text-gray-700" />
+                                        }
+                                    </button>
+                                    <div 
+                                        id={`faq-${index}`}
+                                        className={`mt-4 text-gray-700 leading-relaxed font-inter transition-all duration-200 ${
+                                            openIndex === index ? 'block' : 'hidden'
+                                        }`}
+                                    >
+                                        {faq.answer}
                                     </div>
-                                ))}
-                            </div>
-                            <p className="text-center text-gray-600 text-lg mt-10 font-inter">
-                                Can't find your answer? <a href="#" className="text-[#cc6500] hover:underline">Contact our support team.</a>
-                            </p>
+                                </div>
+                            ))}
                         </div>
-                    </section>
-                </main>
-            </div>
-        </>
+
+                        <p className="text-center text-gray-600 text-lg mt-10 font-inter">
+                            Can't find your answer?{' '}
+                            <a 
+                                href="/contact" 
+                                className="text-[#cc6500] hover:underline font-semibold"
+                            >
+                                Contact our support team
+                            </a>
+                        </p>
+                    </div>
+                </section>
+            </main>
+        </div>
     );
 }

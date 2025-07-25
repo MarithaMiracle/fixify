@@ -4,7 +4,6 @@ import React, { useState } from 'react';
 import Link from 'next/link';
 import { Star, MapPin, Search, SlidersHorizontal, Sparkles } from 'lucide-react';
 
-// Define the type for a Provider for better type safety
 interface Provider {
     id: number | string;
     name: string;
@@ -16,15 +15,20 @@ interface Provider {
     price: number;
 }
 
-// ProviderCard component
 const ProviderCard = ({ provider }: { provider: Provider }) => {
+    const handleImageError = (e: React.SyntheticEvent<HTMLImageElement, Event>) => {
+        const target = e.target as HTMLImageElement;
+        target.onerror = null;
+        target.src = "https://placehold.co/96x96/cccccc/ffffff?text=Pro";
+    };
+
     return (
         <div className="bg-white p-6 rounded-xl shadow-md border border-gray-100 flex flex-col sm:flex-row items-center sm:items-start gap-4 hover:shadow-lg transition-all duration-300 ease-in-out">
             <img
                 src={provider.avatar}
                 alt={provider.name}
                 className="w-24 h-24 rounded-full object-cover shadow-sm flex-shrink-0"
-                onError={(e) => { e.target.onerror = null; e.target.src = "https://placehold.co/96x96/cccccc/ffffff?text=Pro"; }}
+                onError={handleImageError}
             />
             <div className="flex-grow text-center sm:text-left">
                 <h3 className="text-xl font-semibold text-gray-800 font-poppins mb-1">{provider.name}</h3>
