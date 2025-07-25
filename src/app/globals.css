@@ -1,49 +1,15 @@
 @import "tailwindcss";
 @import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&family=Inter:wght@100..900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
 
-/* Define Custom Colors as CSS Variables */
-
-:root {
-    --color-soft-blue: #E0F2F7;
-    --color-deep-teal: #00796B;
-    --color-lavender: #E6E6FA;
-    --color-coral: #FF7F50;
-    --color-gold: #FFD700;
-    --color-lavender-50: #F5F5FC;
-    --color-blue-50: #F0F8FF;
-    /* Add other specific shades if needed, e.g., for category cards */
-    --color-teal-200: #80CBC4;
-    --color-coral-200: #FFAB91;
-    --color-blue-600: #2563EB;
-    /* A deeper blue for some accents */
-    --color-pink-50: #FDF2F8;
-    --color-pink-600: #DB2777;
-    --color-purple-50: #F5F3FF;
-    --color-purple-600: #7C3AED;
-    --color-green-50: #F0FDF4;
-    --color-green-600: #16A34A;
-    --color-yellow-50: #FFFBEB;
-    --color-yellow-600: #CA8A04;
-    --color-indigo-50: #EEF2FF;
-    --color-indigo-600: #4F46E5;
-    --color-red-50: #FEF2F2;
-    --color-red-600: #DC2626;
-    --color-orange-50: #FFF7ED;
-    --color-orange-600: #EA580C;
-}
-
-
-/* Global styles for body and fonts */
+/* Basic typography and reset for all components */
 
 html,
 body {
     font-family: 'Inter', sans-serif;
-    /* Default body font */
     margin: 0;
     padding: 0;
     box-sizing: border-box;
     overflow-x: hidden;
-    /* Prevent horizontal scroll */
 }
 
 h1,
@@ -53,16 +19,15 @@ h4,
 h5,
 h6 {
     font-family: 'Poppins', sans-serif;
-    /* Headings font */
 }
-
-
-/* Ensure images are responsive */
 
 img {
     max-width: 100%;
     height: auto;
 }
+
+
+/* These animation utility classes are fine as they don't depend on custom variables */
 
 .animation-delay-2000 {
     animation-delay: 2s;
@@ -73,10 +38,7 @@ img {
 }
 
 
-/* No custom keyframe animations here as they would not integrate with Tailwind's `animate-` utilities without config. */
-
-
-/* If you need custom animations, they would be pure CSS classes like: */
+/* If you have custom keyframe animations, they should be defined as pure CSS classes */
 
 .my-custom-animation {
     animation: my-keyframe 7s infinite;
@@ -96,3 +58,77 @@ img {
         transform: translate(0px, 0px) scale(1);
     }
 }
+
+
+/* Styling for markdown content for prose class */
+
+.prose h1:first-child {
+    margin-top: 0;
+}
+
+.prose h2 {
+    font-size: 1.875rem;
+    font-weight: 700;
+    margin-top: 2.5rem;
+    margin-bottom: 1rem;
+    color: #333;
+}
+
+.prose h3 {
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin-top: 2rem;
+    margin-bottom: 0.75rem;
+    color: #333;
+}
+
+.prose p {
+    margin-bottom: 1.25rem;
+    line-height: 1.75;
+    color: #4b5563;
+}
+
+.prose ul {
+    list-style-type: disc;
+    margin-left: 1.25rem;
+    margin-bottom: 1.25rem;
+    color: #4b5563;
+}
+
+.prose ol {
+    list-style-type: decimal;
+    margin-left: 1.25rem;
+    margin-bottom: 1.25rem;
+    color: #4b5563;
+}
+
+.prose li {
+    margin-bottom: 0.5rem;
+}
+
+.prose a {
+    color: #cc6500;
+    text-decoration: underline;
+}
+
+
+/* Custom utility for the radio buttons (often added via plugin, but direct CSS for simplicity) */
+
+
+/* This matches the color used in your components' Tailwind classes like text-[#cc6500] */
+
+input[type="radio"].form-radio {
+    accent-color: #cc6500;
+    /* Use accent-color for native radio button styling */
+}
+
+
+/* You might also need to add ring styles for focus for full consistency in globals if not directly in component */
+
+
+/* For example:
+input[type="radio"].form-radio:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(204, 101, 0, 0.5);
+}
+*/

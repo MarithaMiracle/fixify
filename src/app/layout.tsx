@@ -1,6 +1,16 @@
+// src/app/layout.tsx
+// This file is a SERVER COMPONENT by default. DO NOT add "use client"; here.
+
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
-import "./globals.css";
+import "./globals.css"; // Your global CSS for Tailwind and other styles
+
+// CORRECTED PATHS: Use correct relative paths or your configured aliases (e.g., '@/components/Navbar')
+import Navbar from "./components/Navbar"; // Assuming components is in src/components, sibling to src/app
+import Footer from "./components/Footer"; // Assuming components is in src/components, sibling to src/app
+
+// Ensure correct path for AuthProvider
+import { AuthProvider } from "../contexts/AuthContext"; // Assuming contexts is in src/contexts, sibling to src/app
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -12,6 +22,7 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
+// Metadata export. This works because layout.tsx is a Server Component.
 export const metadata: Metadata = {
   title: "Fixify - Book Trusted Local Service Providers Instantly in Nigeria",
   description:
@@ -52,7 +63,15 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        {children}
+        <AuthProvider>
+          <div className="min-h-screen flex flex-col">
+            <Navbar />
+            <main className="flex-grow">
+              {children}
+            </main>
+            <Footer />
+          </div>
+        </AuthProvider>
       </body>
     </html>
   );
