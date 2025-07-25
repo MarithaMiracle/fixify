@@ -20,8 +20,12 @@ interface PageParams {
   id: string;
 }
 
-export default function ProviderProfilePage({ params }: { params: PageParams }) {
-  const { id: providerId } = params;
+interface PageProps {
+  params: Promise<PageParams>;
+}
+
+export default async function ProviderProfilePage({ params }: PageProps) {
+  const { id: providerId } = await params;
 
   // Mock provider data - replace with actual data fetching in production
   const provider = {
