@@ -1,22 +1,52 @@
 "use client";
 
 import React, { useState } from 'react';
-
 import {
     ChevronRight, DollarSign, Sparkles, CreditCard, ChevronLeft
 } from 'lucide-react';
 
-const Step4PaymentOptions = ({ onNextStep, onPreviousStep }) => {
+interface Step4Data {
+    paymentMethod: string;
+}
+
+interface Step4PaymentOptionsProps {
+    onNextStep: (data: Step4Data) => void;
+    onPreviousStep: () => void;
+}
+
+interface PaymentOption {
+    id: string;
+    name: string;
+    icon: React.ReactNode;
+    description: string;
+}
+
+const Step4PaymentOptions: React.FC<Step4PaymentOptionsProps> = ({ onNextStep, onPreviousStep }) => {
     const [selectedPaymentMethod, setSelectedPaymentMethod] = useState('');
     const dummyWalletBalance = '₦15,000'; // Example dummy balance
 
-    const paymentOptions = [
-        { id: 'paystack', name: 'Paystack', icon: <CreditCard className="w-8 h-8 text-[#cc6500]" />, description: 'Pay securely with your card via Paystack.' },
-        { id: 'flutterwave', name: 'Flutterwave', icon: <DollarSign className="w-8 h-8 text-[#cc6500]" />, description: 'Multiple payment options including bank transfer and USSD.' },
-        { id: 'wallet', name: 'Fixify Wallet', icon: <Sparkles className="w-8 h-8 text-[#cc6500]" />, description: `Use your balance: ${dummyWalletBalance}` },
+    const paymentOptions: PaymentOption[] = [
+        { 
+            id: 'paystack', 
+            name: 'Paystack', 
+            icon: <CreditCard className="w-8 h-8 text-[#cc6500]" />, 
+            description: 'Pay securely with your card via Paystack.' 
+        },
+        { 
+            id: 'flutterwave', 
+            name: 'Flutterwave', 
+            icon: <DollarSign className="w-8 h-8 text-[#cc6500]" />, 
+            description: 'Multiple payment options including bank transfer and USSD.' 
+        },
+        { 
+            id: 'wallet', 
+            name: 'Fixify Wallet', 
+            icon: <Sparkles className="w-8 h-8 text-[#cc6500]" />, 
+            description: `Use your balance: ${dummyWalletBalance}` 
+        },
     ];
 
-    const handleSubmit = (e: { preventDefault: () => void; }) => {
+    const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         if (selectedPaymentMethod) {
             onNextStep({ paymentMethod: selectedPaymentMethod });
@@ -35,7 +65,10 @@ const Step4PaymentOptions = ({ onNextStep, onPreviousStep }) => {
                             key={option.id}
                             htmlFor={option.id}
                             className={`flex items-center p-4 rounded-lg border cursor-pointer transition-all duration-200 ease-in-out
-                                ${selectedPaymentMethod === option.id ? 'border-[#cc6500] ring-2 ring-[#cc6500] bg-[#fffbf5]' : 'border-gray-300 hover:border-gray-400'}`}
+                                ${selectedPaymentMethod === option.id 
+                                    ? 'border-[#cc6500] ring-2 ring-[#cc6500] bg-[#fffbf5]' 
+                                    : 'border-gray-300 hover:border-gray-400'
+                                }`}
                         >
                             <input
                                 type="radio"
@@ -57,6 +90,12 @@ const Step4PaymentOptions = ({ onNextStep, onPreviousStep }) => {
                             </div>
                         </label>
                     ))}
+                </div>
+
+                <div className="bg-gray-50 p-4 rounded-lg mb-6">
+                    <p className="text-sm text-gray-700 font-inter">
+                        <strong>Note:</strong> You will be redirected to the selected payment provider to complete your transaction securely.
+                    </p>
                 </div>
 
                 <div className="flex justify-between gap-4 mt-8">

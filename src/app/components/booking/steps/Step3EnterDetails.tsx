@@ -1,10 +1,24 @@
 "use client";
 
 import React, { useState } from 'react';
-
 import { ChevronRight, ChevronLeft } from 'lucide-react';
 
-const Step3EnterDetails = ({ onNextStep, onPreviousStep }) => {
+interface Step3Data {
+    fullName: string;
+    email: string;
+    phoneNumber: string;
+    address: string;
+    city: string;
+    state: string;
+    notes: string;
+}
+
+interface Step3EnterDetailsProps {
+    onNextStep: (data: Step3Data) => void;
+    onPreviousStep: () => void;
+}
+
+const Step3EnterDetails: React.FC<Step3EnterDetailsProps> = ({ onNextStep, onPreviousStep }) => {
     const [fullName, setFullName] = useState('');
     const [email, setEmail] = useState('');
     const [phoneNumber, setPhoneNumber] = useState('');
@@ -13,7 +27,7 @@ const Step3EnterDetails = ({ onNextStep, onPreviousStep }) => {
     const [state, setState] = useState('');
     const [notes, setNotes] = useState('');
 
-    const handleSubmit = (e: { preventDefault: () => void; }) => {
+    const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         if (fullName && email && phoneNumber && address && city && state) {
             onNextStep({ fullName, email, phoneNumber, address, city, state, notes });
@@ -64,6 +78,7 @@ const Step3EnterDetails = ({ onNextStep, onPreviousStep }) => {
                         id="phoneNumber"
                         value={phoneNumber}
                         onChange={(e) => setPhoneNumber(e.target.value)}
+                        placeholder="+234 123 456 7890"
                         className="w-full p-3 border border-gray-300 rounded-lg text-gray-800 focus:outline-none focus:ring-1 focus:ring-[#cc6500] focus:border-[#cc6500] font-inter"
                         required
                     />
@@ -94,6 +109,7 @@ const Step3EnterDetails = ({ onNextStep, onPreviousStep }) => {
                             id="city"
                             value={city}
                             onChange={(e) => setCity(e.target.value)}
+                            placeholder="e.g., Lagos"
                             className="w-full p-3 border border-gray-300 rounded-lg text-gray-800 focus:outline-none focus:ring-1 focus:ring-[#cc6500] focus:border-[#cc6500] font-inter"
                             required
                         />
@@ -107,6 +123,7 @@ const Step3EnterDetails = ({ onNextStep, onPreviousStep }) => {
                             id="state"
                             value={state}
                             onChange={(e) => setState(e.target.value)}
+                            placeholder="e.g., Lagos"
                             className="w-full p-3 border border-gray-300 rounded-lg text-gray-800 focus:outline-none focus:ring-1 focus:ring-[#cc6500] focus:border-[#cc6500] font-inter"
                             required
                         />
@@ -124,7 +141,7 @@ const Step3EnterDetails = ({ onNextStep, onPreviousStep }) => {
                         value={notes}
                         onChange={(e) => setNotes(e.target.value)}
                         className="w-full p-3 border border-gray-300 rounded-lg text-gray-800 resize-y focus:outline-none focus:ring-1 focus:ring-[#cc6500] focus:border-[#cc6500] font-inter"
-                    ></textarea>
+                    />
                 </div>
 
                 <div className="flex justify-between gap-4">

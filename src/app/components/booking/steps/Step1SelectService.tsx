@@ -1,10 +1,20 @@
 "use client";
 
 import React, { useState } from 'react';
-
 import { ChevronRight, TicketPercent, ChevronDown } from 'lucide-react';
 
-const Step1SelectService = ({ onNextStep, onCancel }) => {
+interface Step1Data {
+    selectedService: string;
+    serviceDescription: string;
+    couponCode: string;
+}
+
+interface Step1SelectServiceProps {
+    onNextStep: (data: Step1Data) => void;
+    onCancel: () => void;
+}
+
+const Step1SelectService: React.FC<Step1SelectServiceProps> = ({ onNextStep, onCancel }) => {
     const [selectedService, setSelectedService] = useState('');
     const [serviceDescription, setServiceDescription] = useState('');
     const [showCoupon, setShowCoupon] = useState(false);
@@ -24,7 +34,7 @@ const Step1SelectService = ({ onNextStep, onCancel }) => {
         { value: 'lifestyle-pet-care', label: 'Lifestyle & Pet Care' },
     ];
 
-    const handleSubmit = (e: { preventDefault: () => void; }) => {
+    const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         if (selectedService) {
             onNextStep({ selectedService, serviceDescription, couponCode });
@@ -70,7 +80,7 @@ const Step1SelectService = ({ onNextStep, onCancel }) => {
                         value={serviceDescription}
                         onChange={(e) => setServiceDescription(e.target.value)}
                         className="w-full p-3 border border-gray-300 rounded-lg text-gray-800 resize-y focus:outline-none focus:ring-1 focus:ring-[#cc6500] focus:border-[#cc6500] font-inter"
-                    ></textarea>
+                    />
                 </div>
 
                 <div className="mb-8">
