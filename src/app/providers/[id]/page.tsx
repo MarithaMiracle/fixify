@@ -6,27 +6,25 @@ import { useParams } from 'next/navigation';
 
 import { Star, MapPin, Clock, MessageSquareText, Image, ClipboardList } from 'lucide-react';
 
-// Define the type for the dynamic parameters received by the page component
 interface ProviderProfilePageParams {
     id: string;
 }
 
-// Define the overall props for the ProviderProfilePage component
 interface ProviderProfilePageProps {
     params: ProviderProfilePageParams;
+    searchParams: { [key: string]: string | string[] | undefined };
 }
 
-export default function ProviderProfilePage({ params }: ProviderProfilePageProps) {
-    
+export default function ProviderProfilePage({ params, searchParams }: ProviderProfilePageProps) {
     const { id: providerId } = params;
 
     const provider = {
         name: providerId.split('-').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' '),
-        category: "Professional Makeup Artist", // Placeholder category
+        category: "Professional Makeup Artist",
         location: "Lagos, Nigeria",
         rating: 4.8,
         reviewsCount: 150,
-        profileImage: `https://placehold.co/150x150/dbeafe/1e40af?text=${providerId.split('-').map(word => word.charAt(0)).join('').toUpperCase()}`, // Dynamic placeholder image based on ID
+        profileImage: `https://placehold.co/150x150/dbeafe/1e40af?text=${providerId.split('-').map(word => word.charAt(0)).join('').toUpperCase()}`,
         bio: `Experienced and passionate ${providerId.split('-').join(' ')} with a keen eye for detail and a dedication to enhancing natural beauty. Specializing in bridal, editorial, and special occasion makeup. My goal is to enhance natural beauty and make every client feel confident and beautiful. Available for bookings across Lagos and nearby states.`,
         services: [
             { name: "Bridal Makeup", price: "₦50,000" },
@@ -55,7 +53,6 @@ export default function ProviderProfilePage({ params }: ProviderProfilePageProps
         <div className="min-h-screen flex flex-col bg-gray-50">
             <main className="flex-grow pt-24 pb-12">
                 <div className="container mx-auto px-6">
-                    {/* Provider Header Section */}
                     <section className="bg-white p-6 md:p-8 rounded-xl shadow-md border border-gray-100 mb-8 text-center relative overflow-hidden">
                         <div className="absolute inset-0 opacity-20 z-0">
                             <div className="absolute w-48 h-48 bg-[#cc6500] rounded-full mix-blend-multiply filter blur-xl opacity-50 top-10 left-10"></div>
@@ -88,9 +85,7 @@ export default function ProviderProfilePage({ params }: ProviderProfilePageProps
                     </section>
 
                     <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-                        {/* Left Column: About, Services, Gallery */}
                         <div className="lg:col-span-2 space-y-8">
-                            {/* About Section */}
                             <section className="bg-white p-6 md:p-8 rounded-xl shadow-md border border-gray-100">
                                 <h2 className="text-2xl font-bold text-gray-900 mb-4 font-poppins flex items-center gap-2">
                                     <MessageSquareText className="w-6 h-6 text-[#cc6500]" /> About {provider.name}
@@ -98,7 +93,6 @@ export default function ProviderProfilePage({ params }: ProviderProfilePageProps
                                 <p className="text-gray-700 leading-relaxed font-inter">{provider.bio}</p>
                             </section>
 
-                            {/* Services Offered Section */}
                             <section className="bg-white p-6 md:p-8 rounded-xl shadow-md border border-gray-100">
                                 <h2 className="text-2xl font-bold text-gray-900 mb-4 font-poppins flex items-center gap-2">
                                     <ClipboardList className="w-6 h-6 text-[#cc6500]" /> Services Offered
@@ -115,7 +109,6 @@ export default function ProviderProfilePage({ params }: ProviderProfilePageProps
                                 </div>
                             </section>
 
-                            {/* Photo Gallery Section */}
                             <section className="bg-white p-6 md:p-8 rounded-xl shadow-md border border-gray-100">
                                 <h2 className="text-2xl font-bold text-gray-900 mb-6 font-poppins flex items-center gap-2">
                                     <Image className="w-6 h-6 text-[#cc6500]" /> Photo Gallery
@@ -135,9 +128,7 @@ export default function ProviderProfilePage({ params }: ProviderProfilePageProps
                             </section>
                         </div>
 
-                        {/* Right Column: Booking Card (sticky on desktop) and Reviews */}
                         <div className="lg:col-span-1 space-y-8">
-                            {/* Booking Card / CTA */}
                             <section className="bg-white p-6 md:p-8 rounded-xl shadow-md border border-gray-100 lg:sticky lg:top-24">
                                 <h2 className="text-2xl font-bold text-gray-900 mb-4 font-poppins text-center">Ready to Book?</h2>
                                 <div className="flex items-center mb-4 text-gray-700 font-inter">
@@ -152,7 +143,6 @@ export default function ProviderProfilePage({ params }: ProviderProfilePageProps
                                 <p className="text-center text-sm text-gray-500 mt-4 font-inter">Or <Link href="/contact" className="text-[#cc6500] hover:underline">Send an Inquiry</Link></p>
                             </section>
 
-                            {/* Ratings & Reviews Section */}
                             <section className="bg-white p-6 md:p-8 rounded-xl shadow-md border border-gray-100">
                                 <h2 className="text-2xl font-bold text-gray-900 mb-4 font-poppins flex items-center gap-2">
                                     <Star className="w-6 h-6 text-[#cc6500] fill-[#cc6500]" /> Ratings & Reviews
@@ -163,7 +153,7 @@ export default function ProviderProfilePage({ params }: ProviderProfilePageProps
                                         {[...Array(Math.floor(provider.rating))].map((_, i) => (
                                             <Star key={i} className="w-6 h-6 text-yellow-500 fill-yellow-500" />
                                         ))}
-                                        {[...Array(5 - Math.ceil(provider.rating))].map((_, i) => ( // Corrected Math.ceil usage
+                                        {[...Array(5 - Math.ceil(provider.rating))].map((_, i) => (
                                             <Star key={i} className="w-6 h-6 text-gray-300" />
                                         ))}
                                     </div>
