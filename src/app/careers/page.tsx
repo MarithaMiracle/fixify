@@ -54,7 +54,6 @@ export default function CareersPage() {
                         </div>
                     </section>
                 </main>
-                <Footer />
             </div>
         </>
     );

@@ -81,7 +81,6 @@ export default function BookingFlowPage() {
                         {renderStep()}
                     </div>
                 </main>
-                <Footer />
 
                 {/* Confirmation Modal */}
                 <BookingConfirmationModal

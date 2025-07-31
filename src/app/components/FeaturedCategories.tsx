@@ -75,9 +75,6 @@ const FeaturedCategories: React.FC = () => {
                             <h3 className="text-xl font-semibold text-gray-800 mb-2 font-poppins">{category.name}</h3>
                             <p className="text-gray-600 mb-4 font-inter">{category.description}</p>
                             
-                            {/* Multiple link options - try both approaches */}
-                            
-                            {/* Option 1: Standard href string */}
                             <Link 
                                 href={`/search?category=${encodeURIComponent(category.name)}`}
                                 onClick={() => handleCategoryClick(category.name)}
@@ -86,19 +83,6 @@ const FeaturedCategories: React.FC = () => {
                                 Learn More →
                             </Link>
                             
-                            {/* Option 2: Object format (backup) - uncomment if needed */}
-                            {/*
-                            <Link 
-                                href={{
-                                    pathname: '/search',
-                                    query: { category: category.name }
-                                }}
-                                onClick={() => handleCategoryClick(category.name)}
-                                className="text-[#cc5500] font-semibold hover:text-[#a95500] transition-colors font-inter inline-block"
-                            >
-                                Learn More (Alt) →
-                            </Link>
-                            */}
                         </div>
                     ))}
                 </div>
