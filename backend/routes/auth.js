@@ -5,6 +5,7 @@ const { body, validationResult } = require('express-validator');
 const { User, Provider } = require('../models');
 const { authenticateToken } = require('../middleware/auth');
 const { sendEmail } = require('../utils/email');
+const { Op } = require('sequelize'); // Add this import
 
 const router = express.Router();
 
@@ -48,10 +49,10 @@ router.post('/register', [
 
         const { fullName, email, phone, password, role = 'user' } = req.body;
 
-        // Check if user already exists
+        // Check if user already exists - FIXED: Use Op.or instead of $or
         const existingUser = await User.findOne({
             where: {
-                $or: [{ email }, { phone }]
+                [Op.or]: [{ email }, { phone }]
             }
         });
 
@@ -306,7 +307,7 @@ router.post('/forgot-password', [
     }
 });
 
-// Reset password
+// Reset password - FIXED: Use Op.gt instead of $gt
 router.post('/reset-password/:token', [
     body('password')
     .isLength({ min: 6 })
@@ -329,7 +330,7 @@ router.post('/reset-password/:token', [
             where: {
                 passwordResetToken: token,
                 passwordResetExpires: {
-                    $gt: new Date()
+                    [Op.gt]: new Date()
                 }
             }
         });

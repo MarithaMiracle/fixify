@@ -14,14 +14,24 @@ interface Step3Data {
 }
 
 interface Step3EnterDetailsProps {
-    onNextStep: (data: Step3Data) => void;
+    onNextStep: (data: any) => void;
     onPreviousStep: () => void;
+    initialData?: {
+      fullName: string;
+      email: string;
+      phoneNumber: string;
+    };
 }
 
-const Step3EnterDetails: React.FC<Step3EnterDetailsProps> = ({ onNextStep, onPreviousStep }) => {
-    const [fullName, setFullName] = useState('');
-    const [email, setEmail] = useState('');
-    const [phoneNumber, setPhoneNumber] = useState('');
+const Step3EnterDetails: React.FC<Step3EnterDetailsProps> = ({ 
+    onNextStep, 
+    onPreviousStep, 
+    initialData 
+}) => {
+    // Use initialData to pre-populate the form fields
+    const [fullName, setFullName] = useState(initialData?.fullName || '');
+    const [email, setEmail] = useState(initialData?.email || '');
+    const [phoneNumber, setPhoneNumber] = useState(initialData?.phoneNumber || '');
     const [address, setAddress] = useState('');
     const [city, setCity] = useState('');
     const [state, setState] = useState('');

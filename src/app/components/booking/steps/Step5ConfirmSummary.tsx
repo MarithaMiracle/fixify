@@ -1,7 +1,7 @@
 "use client";
 
 import React from 'react';
-import { CheckCircle, ChevronLeft } from 'lucide-react';
+import { CheckCircle, ChevronLeft, Loader2 } from 'lucide-react';
 
 interface BookingData {
     selectedService?: string;
@@ -22,7 +22,8 @@ interface BookingData {
 interface Step5ConfirmSummaryProps {
     bookingData: BookingData;
     onPreviousStep: () => void;
-    onConfirmBooking: () => void;
+    onConfirmBooking: () => Promise<void>; // Changed to Promise<void> to match the booking page
+    loading: boolean; // Added loading prop
 }
 
 interface DetailRowProps {
@@ -33,7 +34,8 @@ interface DetailRowProps {
 const Step5ConfirmSummary: React.FC<Step5ConfirmSummaryProps> = ({ 
     bookingData, 
     onPreviousStep, 
-    onConfirmBooking 
+    onConfirmBooking,
+    loading // Added loading parameter
 }) => {
     // Helper function to render a detail row
     const DetailRow: React.FC<DetailRowProps> = ({ label, value }) => (
@@ -127,16 +129,27 @@ const Step5ConfirmSummary: React.FC<Step5ConfirmSummaryProps> = ({
                 <button
                     type="button"
                     onClick={onPreviousStep}
-                    className="w-full sm:w-auto bg-white text-gray-700 border border-gray-300 px-6 py-3 rounded-full text-md font-semibold hover:bg-gray-100 transition-all duration-300 ease-in-out shadow-sm font-inter"
+                    disabled={loading} // Disable previous button when loading
+                    className="w-full sm:w-auto bg-white text-gray-700 border border-gray-300 px-6 py-3 rounded-full text-md font-semibold hover:bg-gray-100 transition-all duration-300 ease-in-out shadow-sm font-inter disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                     <ChevronLeft className="inline-block mr-1 w-5 h-5" /> Previous
                 </button>
                 <button
                     type="button"
                     onClick={onConfirmBooking}
-                    className="w-full sm:w-auto bg-green-600 text-white px-8 py-3 rounded-full text-md font-semibold hover:bg-green-700 transition-all duration-300 ease-in-out shadow-md font-inter"
+                    disabled={loading} // Disable confirm button when loading
+                    className="w-full sm:w-auto bg-green-600 text-white px-8 py-3 rounded-full text-md font-semibold hover:bg-green-700 transition-all duration-300 ease-in-out shadow-md font-inter disabled:opacity-50 disabled:cursor-not-allowed"
                 >
-                    Confirm Booking <CheckCircle className="inline-block ml-1 w-5 h-5" />
+                    {loading ? (
+                        <>
+                            <Loader2 className="inline-block mr-2 w-5 h-5 animate-spin" />
+                            Creating Booking...
+                        </>
+                    ) : (
+                        <>
+                            Confirm Booking <CheckCircle className="inline-block ml-1 w-5 h-5" />
+                        </>
+                    )}
                 </button>
             </div>
         </div>
