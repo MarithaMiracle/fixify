@@ -4,8 +4,8 @@ const crypto = require('crypto');
 const { body, validationResult } = require('express-validator');
 const { User, Provider } = require('../models');
 const { authenticateToken } = require('../middleware/auth');
-const { sendEmail } = require('../utils/email');
-const { Op } = require('sequelize'); // Add this import
+const { sendVerificationEmail, sendPasswordResetEmail } = require('../utils/email'); // Corrected and updated imports
+const { Op } = require('sequelize');
 
 const router = express.Router();
 
@@ -37,9 +37,11 @@ router.post('/register', [
     .isIn(['user', 'provider'])
     .withMessage('Role must be either user or provider')
 ], async(req, res) => {
+    console.log('--- Register route hit ---'); // Logging the start of the route
     try {
         const errors = validationResult(req);
         if (!errors.isEmpty()) {
+            console.log('Validation failed:', errors.array());
             return res.status(400).json({
                 success: false,
                 message: 'Validation failed',
@@ -48,8 +50,9 @@ router.post('/register', [
         }
 
         const { fullName, email, phone, password, role = 'user' } = req.body;
+        console.log(`Attempting to register new user with email: ${email} and phone: ${phone}`);
 
-        // Check if user already exists - FIXED: Use Op.or instead of $or
+        // Check if user already exists
         const existingUser = await User.findOne({
             where: {
                 [Op.or]: [{ email }, { phone }]
@@ -57,11 +60,14 @@ router.post('/register', [
         });
 
         if (existingUser) {
+            console.log('User found in database. Registration denied.', existingUser.id);
             return res.status(400).json({
                 success: false,
                 message: 'User with this email or phone already exists'
             });
         }
+
+        console.log('No existing user found. Proceeding with registration.');
 
         // Generate email verification token
         const emailVerificationToken = crypto.randomBytes(32).toString('hex');
@@ -76,6 +82,8 @@ router.post('/register', [
             emailVerificationToken
         });
 
+        console.log('New user created in database:', user.id);
+
         // If provider, create provider profile
         if (role === 'provider') {
             await Provider.create({
@@ -83,10 +91,11 @@ router.post('/register', [
                 bio: `Professional ${fullName}`,
                 isVerified: false
             });
+            console.log('New provider profile created for user:', user.id);
         }
 
-        // Send verification email (implement this based on your email service)
-        // await sendVerificationEmail(user.email, emailVerificationToken);
+        // Send verification email
+        await sendVerificationEmail(user.email, emailVerificationToken, user.fullName);
 
         const token = generateToken(user.id);
 
@@ -106,7 +115,7 @@ router.post('/register', [
             }
         });
     } catch (error) {
-        console.error('Registration error:', error);
+        console.error('CRITICAL Registration error:', error);
         res.status(500).json({
             success: false,
             message: 'Registration failed',
@@ -125,9 +134,11 @@ router.post('/login', [
     .notEmpty()
     .withMessage('Password is required')
 ], async(req, res) => {
+    console.log('--- Login route hit ---'); // Logging the start of the route
     try {
         const errors = validationResult(req);
         if (!errors.isEmpty()) {
+            console.log('Validation failed:', errors.array());
             return res.status(400).json({
                 success: false,
                 message: 'Validation failed',
@@ -136,6 +147,7 @@ router.post('/login', [
         }
 
         const { email, password } = req.body;
+        console.log(`Attempting to log in user with email: ${email}`);
 
         // Find user with password
         const user = await User.findOne({
@@ -149,6 +161,7 @@ router.post('/login', [
         });
 
         if (!user || !(await user.comparePassword(password))) {
+            console.log('Login failed: Invalid email or password.');
             return res.status(401).json({
                 success: false,
                 message: 'Invalid email or password'
@@ -156,6 +169,7 @@ router.post('/login', [
         }
 
         if (!user.isActive) {
+            console.log('Login failed: Account is deactivated.');
             return res.status(401).json({
                 success: false,
                 message: 'Account has been deactivated'
@@ -164,6 +178,7 @@ router.post('/login', [
 
         // Update last login
         await user.update({ lastLoginAt: new Date() });
+        console.log('User successfully logged in:', user.id);
 
         const token = generateToken(user.id);
 
@@ -186,7 +201,7 @@ router.post('/login', [
             }
         });
     } catch (error) {
-        console.error('Login error:', error);
+        console.error('CRITICAL Login error:', error);
         res.status(500).json({
             success: false,
             message: 'Login failed',
@@ -291,8 +306,8 @@ router.post('/forgot-password', [
             passwordResetExpires: resetExpires
         });
 
-        // Send reset email (implement based on your email service)
-        // await sendPasswordResetEmail(user.email, resetToken);
+        // Send reset email
+        await sendPasswordResetEmail(user.email, resetToken, user.fullName);
 
         res.json({
             success: true,
@@ -307,7 +322,7 @@ router.post('/forgot-password', [
     }
 });
 
-// Reset password - FIXED: Use Op.gt instead of $gt
+// Reset password
 router.post('/reset-password/:token', [
     body('password')
     .isLength({ min: 6 })

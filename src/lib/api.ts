@@ -16,9 +16,11 @@ export const apiClient = axios.create({
 // Request interceptor to add auth token
 apiClient.interceptors.request.use(
   (config) => {
-    const token = localStorage.getItem('fixify_token');
-    if (token) {
-      config.headers.Authorization = `Bearer ${token}`;
+    if (typeof window !== 'undefined') {
+      const token = localStorage.getItem('fixify_token');
+      if (token) {
+        config.headers.Authorization = `Bearer ${token}`;
+      }
     }
     return config;
   },
@@ -33,9 +35,11 @@ apiClient.interceptors.response.use(
   (error) => {
     if (error.response?.status === 401) {
       // Token expired or invalid
-      localStorage.removeItem('fixify_token');
-      localStorage.removeItem('fixify_user_role');
-      window.location.href = '/auth';
+      if (typeof window !== 'undefined') {
+        localStorage.removeItem('fixify_token');
+        localStorage.removeItem('fixify_user_role');
+        window.location.href = '/auth';
+      }
     }
     return Promise.reject(error);
   }
@@ -69,6 +73,9 @@ export const API_ENDPOINTS = {
     FEATURED: '/services/featured/list',
     BY_ID: (id: string) => `/services/${id}`,
     PROVIDER_SERVICES: '/services/provider/my-services',
+    CREATE: '/services',
+    UPDATE: (id: string) => `/services/${id}`,
+    DELETE: (id: string) => `/services/${id}`,
   },
   
   // Providers
@@ -76,6 +83,8 @@ export const API_ENDPOINTS = {
     LIST: '/providers',
     BY_ID: (id: string) => `/providers/${id}`,
     PROFILE: '/providers/profile',
+    ME: '/providers/me',
+    UPDATE_BOOKING_STATUS: (bookingId: string) => `/providers/bookings/${bookingId}/status`,
   },
   
   // Bookings
@@ -94,6 +103,7 @@ export const API_ENDPOINTS = {
     PAYSTACK_INITIALIZE: '/payments/paystack/initialize',
     PAYSTACK_VERIFY: '/payments/paystack/verify',
     WALLET_ADD_FUNDS: '/payments/wallet/add-funds',
+    WITHDRAW: '/payments/withdraw',
     HISTORY: '/payments/history',
   },
   
@@ -149,6 +159,15 @@ export const servicesAPI = {
   
   getServiceById: (id: string) => 
     apiClient.get(API_ENDPOINTS.SERVICES.BY_ID(id)),
+
+  create: (data: CreateServiceData) =>
+    apiClient.post(API_ENDPOINTS.SERVICES.CREATE, data),
+
+  update: (id: string, data: UpdateServiceData) =>
+    apiClient.put(API_ENDPOINTS.SERVICES.UPDATE(id), data),
+
+  delete: (id: string) =>
+    apiClient.delete(API_ENDPOINTS.SERVICES.DELETE(id)),
 };
 
 export const bookingsAPI = {
@@ -177,6 +196,34 @@ export const providersAPI = {
   
   updateProfile: (data: UpdateProviderData) => 
     apiClient.put(API_ENDPOINTS.PROVIDERS.PROFILE, data),
+
+  getMe: () => 
+    apiClient.get(API_ENDPOINTS.PROVIDERS.ME),
+
+  updateBookingStatus: (bookingId: string, status: 'confirmed' | 'cancelled') =>
+    apiClient.put(API_ENDPOINTS.PROVIDERS.UPDATE_BOOKING_STATUS(bookingId), { status }),
+};
+
+export const paymentsAPI = {
+  initializePayment: (data: PaymentInitData) =>
+    apiClient.post(API_ENDPOINTS.PAYMENTS.PAYSTACK_INITIALIZE, data),
+
+  verifyPayment: (reference: string) =>
+    apiClient.post(API_ENDPOINTS.PAYMENTS.PAYSTACK_VERIFY, { reference }),
+
+  withdraw: (data: WithdrawData) =>
+    apiClient.post(API_ENDPOINTS.PAYMENTS.WITHDRAW, data),
+
+  getHistory: (params?: PaymentHistoryParams) =>
+    apiClient.get(API_ENDPOINTS.PAYMENTS.HISTORY, { params }),
+};
+
+export const reviewsAPI = {
+  create: (data: CreateReviewData) =>
+    apiClient.post(API_ENDPOINTS.REVIEWS.CREATE, data),
+
+  getByProvider: (providerId: string, params?: ReviewParams) =>
+    apiClient.get(API_ENDPOINTS.REVIEWS.BY_PROVIDER(providerId), { params }),
 };
 
 // Type definitions
@@ -203,6 +250,24 @@ export interface ServicesParams {
   search?: string;
   sortBy?: string;
   sortOrder?: 'ASC' | 'DESC';
+}
+
+export interface CreateServiceData {
+  name: string;
+  description: string;
+  price: number;
+  categoryId: string;
+  imageUrl?: string;
+  isActive?: boolean;
+}
+
+export interface UpdateServiceData {
+  name?: string;
+  description?: string;
+  price?: number;
+  categoryId?: string;
+  imageUrl?: string;
+  isActive?: boolean;
 }
 
 export interface CreateBookingData {
@@ -245,3 +310,69 @@ export interface UpdateProviderData {
   workingHours?: object;
   serviceRadius?: number;
 }
+
+export interface PaymentInitData {
+  amount: number;
+  email: string;
+  reference?: string;
+  metadata?: object;
+}
+
+export interface WithdrawData {
+  amount: number;
+  bankAccount: string;
+  providerId?: string;
+}
+
+export interface PaymentHistoryParams {
+  page?: number;
+  limit?: number;
+  status?: string;
+  type?: string;
+}
+
+export interface CreateReviewData {
+  providerId: string;
+  bookingId: string;
+  rating: number;
+  comment: string;
+}
+
+export interface ReviewParams {
+  page?: number;
+  limit?: number;
+}
+
+// Utility function to handle API errors
+export const handleApiError = (error: any) => {
+  if (error.response?.data?.message) {
+    return error.response.data.message;
+  } else if (error.message) {
+    return error.message;
+  } else {
+    return 'An unexpected error occurred';
+  }
+};
+
+// Helper function to get auth token
+export const getAuthToken = () => {
+  if (typeof window !== 'undefined') {
+    return localStorage.getItem('fixify_token');
+  }
+  return null;
+};
+
+// Helper function to check if user is authenticated
+export const isAuthenticated = () => {
+  return !!getAuthToken();
+};
+
+// Helper function to get user role
+export const getUserRole = () => {
+  if (typeof window !== 'undefined') {
+    return localStorage.getItem('fixify_user_role');
+  }
+  return null;
+};
+
+export default apiClient;

@@ -1,11 +1,18 @@
+// utils/email.js
 const nodemailer = require('nodemailer');
 
-// Create transporter
+// Helper function to create a Nodemailer transporter
 const createTransporter = () => {
-    return nodemailer.createTransporter({
+    // Check for necessary environment variables
+    if (!process.env.SMTP_HOST || !process.env.SMTP_PORT || !process.env.SMTP_EMAIL || !process.env.SMTP_PASSWORD) {
+        throw new Error('SMTP configuration environment variables are missing.');
+    }
+
+    // The correct function name is createTransport, not createTransporter
+    return nodemailer.createTransport({
         host: process.env.SMTP_HOST,
         port: process.env.SMTP_PORT,
-        secure: false, // true for 465, false for other ports
+        secure: process.env.SMTP_PORT == 465, // Use true for 465, false for other ports
         auth: {
             user: process.env.SMTP_EMAIL,
             pass: process.env.SMTP_PASSWORD

@@ -10,6 +10,7 @@ const {
     WalletTransaction,
     Notification
 } = require('../models');
+const bcrypt = require('bcryptjs');
 
 const seedDatabase = async() => {
     try {
@@ -65,12 +66,19 @@ const seedDatabase = async() => {
         ]);
         console.log('✅ Service categories seeded');
 
+        // Hash passwords before creating users
+        const salt = await bcrypt.genSalt(10);
+        const hashedPassword_admin = await bcrypt.hash('admin123', salt);
+        const hashedPassword_customer = await bcrypt.hash('customer123', salt);
+        const hashedPassword_provider = await bcrypt.hash('provider123', salt);
+
+
         // Seed Users
         const users = await User.bulkCreate([{
                 fullName: 'John Admin',
                 email: 'admin@fixify.com',
                 phone: '08012345678',
-                password: 'admin123',
+                password: hashedPassword_admin,
                 role: 'admin',
                 isEmailVerified: true,
                 isPhoneVerified: true,
@@ -86,7 +94,7 @@ const seedDatabase = async() => {
                 fullName: 'Jane Customer',
                 email: 'customer@example.com',
                 phone: '08012345679',
-                password: 'customer123',
+                password: hashedPassword_customer,
                 role: 'user',
                 isEmailVerified: true,
                 isPhoneVerified: true,
@@ -102,7 +110,7 @@ const seedDatabase = async() => {
                 fullName: 'Sarah Adebayo',
                 email: 'sarah@makeup.com',
                 phone: '08012345680',
-                password: 'provider123',
+                password: hashedPassword_provider,
                 role: 'provider',
                 isEmailVerified: true,
                 isPhoneVerified: true,
@@ -118,7 +126,7 @@ const seedDatabase = async() => {
                 fullName: 'Mike Electrician',
                 email: 'mike@electric.com',
                 phone: '08012345681',
-                password: 'provider123',
+                password: hashedPassword_provider,
                 role: 'provider',
                 isEmailVerified: true,
                 isPhoneVerified: true,
@@ -134,7 +142,7 @@ const seedDatabase = async() => {
                 fullName: 'Grace Chef',
                 email: 'grace@catering.com',
                 phone: '08012345682',
-                password: 'provider123',
+                password: hashedPassword_provider,
                 role: 'provider',
                 isEmailVerified: true,
                 isPhoneVerified: true,
@@ -360,6 +368,7 @@ const seedDatabase = async() => {
                 userId: users[1].id, // Jane Customer
                 providerId: providers[0].id, // Sarah
                 serviceId: services[0].id, // Bridal Makeup
+                bookingNumber: 'FXF-BOOK-001',
                 scheduledDate: '2024-08-15',
                 scheduledTime: '10:00',
                 address: {
@@ -378,6 +387,7 @@ const seedDatabase = async() => {
                 userId: users[1].id,
                 providerId: providers[1].id, // Mike
                 serviceId: services[3].id, // Electrical Installation
+                bookingNumber: 'FXF-BOOK-002',
                 scheduledDate: '2024-08-20',
                 scheduledTime: '09:00',
                 address: {

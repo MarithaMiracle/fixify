@@ -1,169 +1,183 @@
 // src/contexts/AuthContext.tsx
 "use client";
-import React, { createContext, useContext, useState, useEffect } from 'react';
+
+import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import { useRouter } from 'next/navigation';
-import { authAPI, RegisterData, LoginData } from '../lib/api';
+import { authAPI, handleApiError } from '../lib/api';
 
 interface User {
   id: string;
   fullName: string;
   email: string;
   phone: string;
-  role: 'user' | 'provider' | 'admin';
+  isProvider: boolean;
+  isActive: boolean;
   isEmailVerified: boolean;
   profileImage?: string;
+  address?: any;
   walletBalance?: number;
   providerProfile?: any;
 }
 
 interface AuthContextType {
   user: User | null;
-  isAuthenticated: boolean;
+  token: string | null;
   loading: boolean;
-  login: (data: LoginData) => Promise<void>;
-  register: (data: RegisterData) => Promise<void>;
+  isAuthenticated: boolean;
+  isProvider: boolean;
+  login: (credentials: { email: string; password: string }) => Promise<void>;
+  register: (data: any) => Promise<void>;
   logout: () => void;
-  updateUser: (userData: Partial<User>) => void;
+  refreshUser: () => Promise<void>;
 }
 
-const AuthContext = createContext<AuthContextType | null>(null);
+const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
+export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
-  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
-  const [loading, setLoading] = useState<boolean>(true);
+  const [token, setToken] = useState<string | null>(null);
+  const [loading, setLoading] = useState(true);
   const router = useRouter();
 
-  // Check for stored token and validate on mount
+  // Load user from localStorage and verify token on initial render
   useEffect(() => {
-    const checkAuthStatus = async () => {
-      const token = localStorage.getItem('fixify_token');
-      
-      if (token) {
-        try {
-          const response = await authAPI.me();
-          if (response.data.success) {
-            setUser(response.data.data.user);
-            setIsAuthenticated(true);
-          } else {
-            // Invalid token, clear storage
+    const initializeAuth = async () => {
+      try {
+        const storedToken = localStorage.getItem('fixify_token');
+        const storedUser = localStorage.getItem('fixify_user');
+        
+        if (storedToken && storedUser) {
+          setToken(storedToken);
+          
+          try {
+            // Verify token is still valid by fetching current user
+            const response = await authAPI.me();
+            if (response.data.success) {
+              const userData = response.data.data.user;
+              setUser(userData);
+              localStorage.setItem('fixify_user', JSON.stringify(userData));
+              localStorage.setItem('fixify_user_role', userData.isProvider ? 'provider' : 'user');
+              console.log('✅ User authenticated:', userData);
+            }
+          } catch (error) {
+            console.log('❌ Token invalid, clearing auth data');
+            // Token is invalid, clear everything
             localStorage.removeItem('fixify_token');
+            localStorage.removeItem('fixify_user');
             localStorage.removeItem('fixify_user_role');
+            setToken(null);
+            setUser(null);
           }
-        } catch (error) {
-          console.error('Auth check failed:', error);
-          localStorage.removeItem('fixify_token');
-          localStorage.removeItem('fixify_user_role');
         }
+      } catch (error) {
+        console.error('Auth initialization error:', error);
+      } finally {
+        setLoading(false);
       }
-      
-      setLoading(false);
     };
 
-    checkAuthStatus();
+    initializeAuth();
   }, []);
 
-  const login = async (data: LoginData) => {
+  const login = async (credentials: { email: string; password: string }) => {
     try {
       setLoading(true);
-      const response = await authAPI.login(data);
+      const response = await authAPI.login(credentials);
       
       if (response.data.success) {
-        const { user: userData, token } = response.data.data;
+        const { user: userData, token: userToken } = response.data.data;
         
-        // Store token and user data
-        localStorage.setItem('fixify_token', token);
-        localStorage.setItem('fixify_user_role', userData.role);
-        
+        // Update state
         setUser(userData);
-        setIsAuthenticated(true);
+        setToken(userToken);
         
-        // Redirect based on role
-        const redirectPath = getRedirectPath(userData.role);
-        router.push(redirectPath);
-      } else {
-        throw new Error('Login failed: ' + response.data.message);
+        // Store in localStorage
+        localStorage.setItem('fixify_token', userToken);
+        localStorage.setItem('fixify_user', JSON.stringify(userData));
+        localStorage.setItem('fixify_user_role', userData.isProvider ? 'provider' : 'user');
+        
+        console.log('✅ Login successful:', userData);
+        
+        // Redirect based on user role
+        if (userData.isProvider) {
+          router.push('/provider-dashboard');
+        } else {
+          router.push('/dashboard');
+        }
       }
-    } catch (error: any) {
-      console.error('Login error:', error);
-      throw new Error(error.response?.data?.message || 'Login failed');
+    } catch (error) {
+      console.error('❌ Login failed:', error);
+      throw new Error(handleApiError(error));
     } finally {
       setLoading(false);
     }
   };
 
-  const register = async (data: RegisterData) => {
+  const register = async (data: any) => {
     try {
       setLoading(true);
       const response = await authAPI.register(data);
       
       if (response.data.success) {
-        const { user: userData, token } = response.data.data;
-        
-        // Store token and user data
-        localStorage.setItem('fixify_token', token);
-        localStorage.setItem('fixify_user_role', userData.role);
-        
-        setUser(userData);
-        setIsAuthenticated(true);
-        
-        // Redirect based on role
-        const redirectPath = getRedirectPath(userData.role);
-        router.push(redirectPath);
-      } else {
-        throw new Error('Registration failed: ' + response.data.message);
+        console.log('✅ Registration successful');
+        // Don't auto-login, redirect to login page
+        router.push('/auth?tab=login&message=Registration successful! Please login.');
       }
-    } catch (error: any) {
-      console.error('Registration error:', error);
-      throw new Error(error.response?.data?.message || 'Registration failed');
+    } catch (error) {
+      console.error('❌ Registration failed:', error);
+      throw new Error(handleApiError(error));
     } finally {
       setLoading(false);
     }
   };
 
+  const refreshUser = async () => {
+    try {
+      if (!token) return;
+      
+      const response = await authAPI.me();
+      if (response.data.success) {
+        const userData = response.data.data.user;
+        setUser(userData);
+        localStorage.setItem('fixify_user', JSON.stringify(userData));
+        console.log('✅ User data refreshed');
+      }
+    } catch (error) {
+      console.error('❌ Failed to refresh user data:', error);
+      // If refresh fails, logout user
+      logout();
+    }
+  };
+
   const logout = () => {
-    localStorage.removeItem('fixify_token');
-    localStorage.removeItem('fixify_user_role');
+    // Clear state
     setUser(null);
-    setIsAuthenticated(false);
+    setToken(null);
+    
+    // Clear localStorage
+    localStorage.removeItem('fixify_token');
+    localStorage.removeItem('fixify_user');
+    localStorage.removeItem('fixify_user_role');
+    
+    console.log('✅ User logged out');
     router.push('/auth');
   };
 
-  const updateUser = (userData: Partial<User>) => {
-    if (user) {
-      setUser({ ...user, ...userData });
-    }
-  };
-
-  const getRedirectPath = (role: string): string => {
-    switch (role) {
-      case 'user': return '/dashboard';
-      case 'provider': return '/provider-dashboard';
-      case 'admin': return '/admin';
-      default: return '/';
-    }
-  };
-
-  const value: AuthContextType = {
-    user,
-    isAuthenticated,
-    loading,
-    login,
-    register,
-    logout,
-    updateUser,
-  };
-
-  if (loading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-[#cc6500]"></div>
-      </div>
-    );
-  }
+  const isAuthenticated = !!user && !!token;
+  const isProvider = user?.isProvider || false;
 
   return (
-    <AuthContext.Provider value={value}>
+    <AuthContext.Provider value={{ 
+      user, 
+      token, 
+      loading, 
+      isAuthenticated,
+      isProvider,
+      login, 
+      register, 
+      logout,
+      refreshUser
+    }}>
       {children}
     </AuthContext.Provider>
   );
@@ -171,7 +185,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
 export const useAuth = () => {
   const context = useContext(AuthContext);
-  if (context === null) {
+  if (context === undefined) {
     throw new Error('useAuth must be used within an AuthProvider');
   }
   return context;

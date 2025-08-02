@@ -1,13 +1,29 @@
-// src/app/auth/page.tsx
 "use client";
 
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import Link from 'next/link';
 import { User, Mail, Phone, Lock, Eye, EyeOff, Loader2 } from 'lucide-react';
 import { useAuth } from '../../contexts/AuthContext';
 import { useRouter } from 'next/navigation';
 
 export default function AuthPage() {
+    const { isAuthenticated, login, register, loading: authLoading } = useAuth();
+    const router = useRouter();
+    
+    // Redirect if already authenticated
+    if (authLoading) {
+        return (
+            <div className="min-h-screen flex items-center justify-center">
+                <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-[#cc6500]"></div>
+            </div>
+        );
+    }
+
+    if (isAuthenticated) {
+        router.replace('/dashboard');
+        return null; // Return null to prevent rendering anything before redirect
+    }
+
     const [isSignUp, setIsSignUp] = useState(true);
     const [showPassword, setShowPassword] = useState(false);
     const [userType, setUserType] = useState<'user' | 'provider'>('user');
@@ -20,16 +36,6 @@ export default function AuthPage() {
     const [phone, setPhone] = useState('');
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
-
-    const { isAuthenticated, login, register } = useAuth();
-    const router = useRouter();
-
-    // Redirect if already authenticated
-    useEffect(() => {
-        if (isAuthenticated) {
-            router.replace('/dashboard');
-        }
-    }, [isAuthenticated, router]);
 
     const handleToggleAuthMode = () => {
         setIsSignUp(!isSignUp);
@@ -91,8 +97,12 @@ export default function AuthPage() {
                 password,
                 role: userType,
             });
+            router.push('/auth/check-email');
         } catch (err: any) {
-            setError(err.message || 'Registration failed');
+            // Correctly access the error message from the backend response
+            // The message is typically found in err.response.data.message
+            const backendErrorMsg = err.response?.data?.message || err.message || 'Registration failed';
+            setError(backendErrorMsg);
         } finally {
             setLoading(false);
         }
@@ -111,7 +121,7 @@ export default function AuthPage() {
                 password,
             });
         } catch (err: any) {
-            setError(err.message || 'Login failed');
+            setError(err.response?.data?.message || 'Login failed');
         } finally {
             setLoading(false);
         }
@@ -127,8 +137,17 @@ export default function AuthPage() {
 
                     {/* Error Message */}
                     {error && (
-                        <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg text-sm">
-                            {error}
+                        <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg text-sm flex items-center justify-between">
+                            <span>{error}</span>
+                            {error.includes('already exists') && (
+                                <button
+                                    type="button"
+                                    onClick={handleToggleAuthMode}
+                                    className="text-[#cc6500] hover:underline font-semibold"
+                                >
+                                    Log In
+                                </button>
+                            )}
                         </div>
                     )}
 
@@ -234,6 +253,15 @@ export default function AuthPage() {
                                 </span>
                             </div>
                         </div>
+
+                        {/* --- Added "Forgot password?" link here, only for login --- */}
+                        {!isSignUp && (
+                            <div className="text-right">
+                                <Link href="/forgot-password" className="text-sm text-[#cc6500] hover:text-[#a95500] hover:underline font-semibold">
+                                    Forgot password?
+                                </Link>
+                            </div>
+                        )}
                         
                         {isSignUp && (
                             <div>
