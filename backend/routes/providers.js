@@ -48,10 +48,12 @@ router.get('/', [
             };
         }
 
-        // Filter by city
+        // Filter by city - Fixed syntax for JSONB query
         if (city) {
-            userWhereClause['address.city'] = {
-                [Op.iLike]: `%${city}%`
+            userWhereClause.address = {
+                city: {
+                    [Op.iLike]: `%${city}%`
+                }
             };
         }
 
@@ -193,7 +195,8 @@ router.get('/me', authenticateToken, async(req, res) => {
             where: {
                 providerId: provider.id,
                 status: {
-                    [Op.in]: ['pending', 'confirmed'] }
+                    [Op.in]: ['pending', 'confirmed']
+                }
             }
         });
 
@@ -224,7 +227,8 @@ router.get('/me', authenticateToken, async(req, res) => {
             where: {
                 providerId: provider.id,
                 createdAt: {
-                    [Op.gte]: firstDayOfMonth }
+                    [Op.gte]: firstDayOfMonth
+                }
             }
         });
 
@@ -233,7 +237,8 @@ router.get('/me', authenticateToken, async(req, res) => {
                 providerId: provider.id,
                 status: 'completed',
                 createdAt: {
-                    [Op.gte]: firstDayOfMonth }
+                    [Op.gte]: firstDayOfMonth
+                }
             }
         }) || 0;
 
@@ -241,11 +246,11 @@ router.get('/me', authenticateToken, async(req, res) => {
         const enhancedProviderData = {
             ...provider.toJSON(),
             statistics: {
-                totalBookings: provider.Bookings ? .length || 0,
+                totalBookings: provider.Bookings ? provider.Bookings.length : 0,
                 completedBookings: completedBookings.length,
                 pendingBookings: pendingBookings.length,
-                totalServices: provider.Services ? .length || 0,
-                totalReviews: provider.Reviews ? .length || 0,
+                totalServices: provider.Services ? provider.Services.length : 0,
+                totalReviews: provider.Reviews ? provider.Reviews.length : 0,
                 monthlyBookings,
                 monthlyEarnings
             },

@@ -6,6 +6,7 @@ import { useRouter } from 'next/navigation';
 import { authAPI, handleApiError } from '../lib/api';
 
 interface User {
+  role: string;
   id: string;
   fullName: string;
   email: string;
